@@ -1,9 +1,8 @@
 /.vs
-/avec2.py
-/build
-/make.bat
-/Makefile
+docs/make.bat
+docs/Makefile
 /pic
 /*.vrmnx
+/toruo.json
 /__pycache__
 /release
