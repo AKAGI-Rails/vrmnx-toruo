@@ -6,11 +6,14 @@
 撮る夫くん ユーザーズマニュアル
 ========================================
 
+.. automodule:: toruo
+   :noindex:
+
 .. toctree::
    :maxdepth: 2
-   :caption: API Reference
 
-   toruo
+   クイックスタート <quickstart>
+   撮る夫くん リファレンス <toruo>
 
 Indices and tables
 ==================

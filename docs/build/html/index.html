@@ -56,7 +56,7 @@
     <script src="_static/translations.js"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
-    <link rel="next" title="toruo module" href="toruo.html" />
+    <link rel="next" title="撮る夫くん クイックスタート" href="quickstart.html" />
   
    
 
@@ -202,10 +202,34 @@
             
   
 <h1 id="index--page-root">撮る夫くん ユーザーズマニュアル<a class="headerlink" href="#index--page-root" title="このヘッドラインへのパーマリンク">¶</a></h1>
+<p>撮る夫くん</p>
+<p>VRMNXでグローバルカメラの高機能な操作システムを提供します。</p>
+<p class="rubric">サンプル</p>
+<p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
+<code class="docutils literal notranslate"><span class="pre">activate()</span></code> を記述します:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vrmnx</span>
+<span class="kn">import</span> <span class="nn">toruo</span>
+
+<span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+    <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>v.3.0.0 Beta    NX用初版</p></li>
+<li><p>v.3.0.1 Beta    被写界深度に対応</p></li>
+<li><p>v.3.0.2 Beta    子分の保存に対応</p></li>
+<li><p>v.3.0.3 Beta    追尾・オートフォーカス・プログラムオート</p></li>
+<li><p>v.3.0.4         ファイル入出力に正式対応</p></li>
+<li><p>v.3.0.5 Beta    ファジィ撮る夫くん</p></li>
+<li><p>v.3.0.6 RC2     子分にAEオプションも保存(2019.12.5)</p></li>
+<li><p>v.3.0.7         太陽位置の操作パネルを実装。</p></li>
+</ul>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="toruo.html">toruo module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">クイックスタート</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toruo.html">撮る夫くん リファレンス</a></li>
 </ul>
 </div>
 
@@ -229,12 +253,12 @@
       <nav class="md-footer-nav__inner md-grid">
           
           
-            <a href="toruo.html" title="toruo module"
+            <a href="quickstart.html" title="撮る夫くん クイックスタート"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> toruo module </span>
+                class="md-footer-nav__direction"> Next </span> 撮る夫くん　クイックスタート </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
