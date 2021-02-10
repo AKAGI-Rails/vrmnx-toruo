@@ -4,5 +4,6 @@
 /make.bat
 /Makefile
 /pic
-/toruo_nx2.vrmnx
+/*.vrmnx
 /__pycache__
+/release

@@ -28,7 +28,7 @@ Example:
 __version__ = '3.0.7'
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
-            'jump_toruo', 'activate', 'setfactor', 'setshakemode']
+           'activate', 'jump_toruo', 'setfactor', 'setshakemode']
 
 try:
     import vrmapi
