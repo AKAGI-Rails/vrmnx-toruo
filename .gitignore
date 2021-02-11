@@ -1,7 +1,7 @@
 /.vs
 /.vscode
-docs/make.bat
-docs/Makefile
+/docs
+!/docs/source
 /pic
 /*.vrmnx
 /toruo.json
