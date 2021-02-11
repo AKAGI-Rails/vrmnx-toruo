@@ -1,7 +1,5 @@
 /.vs
 /.vscode
-/docs
-!/docs/source
 /pic
 /*.vrmnx
 /toruo.json
