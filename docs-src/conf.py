@@ -16,6 +16,8 @@ sys.path.insert(0, os.path.abspath('../'))
 #from unittest.mock import MagicMock
 #sys.modules['vrmapi'] = MagicMock()
 
+import toruo
+
 
 # -- Project information -----------------------------------------------------
 
@@ -24,7 +26,7 @@ copyright = '2021, AKAGI Rails'
 author = 'AKAGI Rails'
 
 # The full version, including alpha/beta/rc tags
-release = 'v.3.0.7 RC2'
+release = toruo.__version__
 
 
 # -- General configuration ---------------------------------------------------
