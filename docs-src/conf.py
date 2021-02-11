@@ -93,7 +93,7 @@ html_theme_options = {
     'color_primary': 'teal',
     'color_accent': 'green',
     
-    'logo_icon': 'video_camera_back',
+    'logo_icon': 'videocam',
 
     # Set the repo location to get a badge with stats
     'repo_url': 'https://github.com/AKAGI-Rails/vrmnx-toruo',
