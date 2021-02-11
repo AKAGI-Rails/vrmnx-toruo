@@ -6,18 +6,26 @@
 撮る夫くん ユーザーズマニュアル
 ========================================
 
+.. toctree::
+   :caption: Contents
+   :maxdepth: 3
+
+   クイックスタート <quickstart>
+   リファレンス <toruo>
+
 .. automodule:: toruo
    :noindex:
 
-.. toctree::
-   :maxdepth: 2
 
-   クイックスタート <quickstart>
-   撮る夫くん リファレンス <toruo>
-
-Indices and tables
-==================
+検索と索引
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. toctree::
+   :caption: 外部リンク
+
+   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
+   VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>

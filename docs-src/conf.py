@@ -34,22 +34,20 @@ release = 'v.3.0.7 RC2'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    #'sphinx.ext.autosummary',
+    'sphinx.ext.autosummary',
     #'sphinx_automodapi.automodapi',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
+    'sphinx.ext.githubpages',
     'recommonmark',
 ]
-#autodoc_mock_imports = ["vrmapi"]
 
 source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
 
-#autodoc_mock_imports = ['vrmapi']
-#autodoc_member_order = 'bysource'
 napoleon_use_rtype = False
 todo_include_todos = True
 
@@ -87,15 +85,17 @@ html_theme_options = {
 
     # Specify a base_url used to generate sitemap.xml. If not
     # specified, then no sitemap will be built.
-    #'base_url': 'https://project.github.io/project',
+    'base_url': 'https://akagi-rails.github.io/vrmnx-toruo',
 
     # Set the color and the accent color
-    'color_primary': 'black',
-    'color_accent': 'light-blue',
+    'color_primary': 'teal',
+    'color_accent': 'green',
+    
+    'logo_icon': 'subway',
 
     # Set the repo location to get a badge with stats
-    #'repo_url': 'https://github.com/project/project/',
-    #'repo_name': 'Project',
+    'repo_url': 'https://github.com/AKAGI-Rails/vrmnx-toruo',
+    'repo_name': '撮る夫くん',
 
     # Visible levels of the global TOC; -1 means unlimited
     'globaltoc_depth': 3,
@@ -104,7 +104,10 @@ html_theme_options = {
     # If True, show hidden TOC entries
     'globaltoc_includehidden': False,
 }
+html_sidebars = {
+    "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
+}
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
