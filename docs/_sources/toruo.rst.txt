@@ -1,5 +1,5 @@
-toruo module
-============
+撮る夫くん リファレンス
+============================
 
 .. automodule:: toruo
    :members:
