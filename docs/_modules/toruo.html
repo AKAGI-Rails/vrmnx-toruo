@@ -214,7 +214,77 @@
     
     
       <a href="../quickstart.html" class="md-nav__link">クイックスタート</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id2" class="md-nav__link">ダウンロード</a>
       
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id3" class="md-nav__link">撮る夫くんを有効にする</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id4" class="md-nav__link">撮る夫くんの操作方法</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#fov-field-of-view" class="md-nav__link">FOV (Field of View)</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id5" class="md-nav__link">合焦距離</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#f" class="md-nav__link">F値</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id6" class="md-nav__link">ぼけの強さ</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#ae" class="md-nav__link">プログラムAE</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id7" class="md-nav__link">キー操作</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../quickstart.html#id8" class="md-nav__link">撮る夫くんの視点保存</a>
+      
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -222,6 +292,69 @@
     
       <a href="../toruo.html" class="md-nav__link">リファレンス</a>
       
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html" class="md-nav__link">リリースノート</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-0-beta" class="md-nav__link">v.3.0.0 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-1-beta" class="md-nav__link">v.3.0.1 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-2-beta" class="md-nav__link">v.3.0.2 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-3-beta" class="md-nav__link">v.3.0.3 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-4" class="md-nav__link">v.3.0.4</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-5-beta" class="md-nav__link">v.3.0.5 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-6-rc2" class="md-nav__link">v.3.0.6 RC2</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../history.html#v-3-0-7" class="md-nav__link">v.3.0.7</a>
+      
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -271,9 +404,18 @@
             
   <h1 id="modules-toruo--page-root">toruo のソースコード</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">"""撮る夫くん</span>
+<span class="sd">"""撮る夫くん - VRMNX用グローバルカメラ拡張機能</span>
 
-<span class="sd">VRMNXでグローバルカメラの高機能な操作システムを提供します。</span>
+<span class="sd">VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。</span>
+<span class="sd">ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行うことができます。</span>
+
+<span class="sd">撮る夫くんには以下のような機能があります::</span>
+
+<span class="sd">    - FOVなどのGUI操作</span>
+<span class="sd">    - FOV, F値と対象物までの距離から，一眼レフカメラの機構をシミュレートした被写界深度制御</span>
+<span class="sd">    - 手ブレ風エフェクト</span>
+<span class="sd">    - 車両追尾</span>
+<span class="sd">    - 視点保存</span>
 
 <span class="sd">Example:</span>
 <span class="sd">    撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に</span>
@@ -287,20 +429,12 @@
 <span class="sd">            if ev == 'init':</span>
 <span class="sd">                pass</span>
 <span class="sd">    </span>
-
-<span class="sd">* v.3.0.0 Beta    NX用初版</span>
-<span class="sd">* v.3.0.1 Beta    被写界深度に対応</span>
-<span class="sd">* v.3.0.2 Beta    子分の保存に対応</span>
-<span class="sd">* v.3.0.3 Beta    追尾・オートフォーカス・プログラムオート</span>
-<span class="sd">* v.3.0.4         ファイル入出力に正式対応</span>
-<span class="sd">* v.3.0.5 Beta    ファジィ撮る夫くん</span>
-<span class="sd">* v.3.0.6 RC2     子分にAEオプションも保存(2019.12.5)</span>
-<span class="sd">* v.3.0.7         太陽位置の操作パネルを実装。</span>
 <span class="sd">"""</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.0.7'</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DEBUG'</span><span class="p">,</span> <span class="s1">'dFOV'</span><span class="p">,</span> <span class="s1">'dRot'</span><span class="p">,</span> <span class="s1">'dMov'</span><span class="p">,</span> <span class="s1">'shake_factor'</span><span class="p">,</span> <span class="s1">'shake_freq'</span><span class="p">,</span>
            <span class="s1">'activate'</span><span class="p">,</span> <span class="s1">'jump_toruo'</span><span class="p">,</span> <span class="s1">'setfactor'</span><span class="p">,</span> <span class="s1">'setshakemode'</span><span class="p">]</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.0.7'</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"AKAGI"</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">vrmapi</span>

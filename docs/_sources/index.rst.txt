@@ -6,16 +6,29 @@
 撮る夫くん ユーザーズマニュアル
 ========================================
 
+.. automodule:: toruo
+   :noindex:
+
 .. toctree::
    :caption: Contents
    :maxdepth: 3
 
    クイックスタート <quickstart>
    リファレンス <toruo>
+   history
 
-.. automodule:: toruo
-   :noindex:
+ダウンロード
+----------------
 
+`toruo.py <https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py>`_
+
+詳細なガイドは， `クイックスタート <quickstart>`_ をごらんください。
+
+.. toctree::
+   :caption: 外部リンク
+
+   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
+   VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
 
 検索と索引
 ------------------
@@ -23,9 +36,3 @@
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-.. toctree::
-   :caption: 外部リンク
-
-   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
-   VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>

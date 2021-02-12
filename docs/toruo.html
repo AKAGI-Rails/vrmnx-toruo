@@ -56,6 +56,7 @@
     <script src="_static/translations.js"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="リリースノート" href="history.html" />
     <link rel="prev" title="撮る夫くん クイックスタート" href="quickstart.html" />
   
    
@@ -214,7 +215,77 @@
     
     
       <a href="quickstart.html" class="md-nav__link">クイックスタート</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id2" class="md-nav__link">ダウンロード</a>
       
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id3" class="md-nav__link">撮る夫くんを有効にする</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id4" class="md-nav__link">撮る夫くんの操作方法</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#fov-field-of-view" class="md-nav__link">FOV (Field of View)</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id5" class="md-nav__link">合焦距離</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#f" class="md-nav__link">F値</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id6" class="md-nav__link">ぼけの強さ</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#ae" class="md-nav__link">プログラムAE</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id7" class="md-nav__link">キー操作</a>
+      
+    
+    </li></ul>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="quickstart.html#id8" class="md-nav__link">撮る夫くんの視点保存</a>
+      
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -234,6 +305,69 @@
   </ul>
 </nav>
       
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html" class="md-nav__link">リリースノート</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-0-beta" class="md-nav__link">v.3.0.0 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-1-beta" class="md-nav__link">v.3.0.1 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-2-beta" class="md-nav__link">v.3.0.2 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-3-beta" class="md-nav__link">v.3.0.3 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-4" class="md-nav__link">v.3.0.4</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-5-beta" class="md-nav__link">v.3.0.5 Beta</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-6-rc2" class="md-nav__link">v.3.0.6 RC2</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="history.html#v-3-0-7" class="md-nav__link">v.3.0.7</a>
+      
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -284,8 +418,17 @@
             
   
 <span id="id1"></span><h1 id="toruo--page-root">撮る夫くん リファレンス<a class="headerlink" href="#toruo--page-root" title="このヘッドラインへのパーマリンク">¶</a></h1>
-<p>撮る夫くん</p>
-<p>VRMNXでグローバルカメラの高機能な操作システムを提供します。</p>
+<p>撮る夫くん - VRMNX用グローバルカメラ拡張機能</p>
+<p>VRMNX用Python拡張の <strong>撮る夫くん</strong> は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。
+ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行うことができます。</p>
+<p>撮る夫くんには以下のような機能があります:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>- FOVなどのGUI操作
+- FOV, F値と対象物までの距離から，一眼レフカメラの機構をシミュレートした被写界深度制御
+- 手ブレ風エフェクト
+- 車両追尾
+- 視点保存
+</pre></div>
+</div>
 <p class="rubric">サンプル</p>
 <p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
 <code class="docutils literal notranslate"><span class="pre">activate()</span></code> を記述します:</p>
@@ -298,16 +441,6 @@
         <span class="k">pass</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li><p>v.3.0.0 Beta    NX用初版</p></li>
-<li><p>v.3.0.1 Beta    被写界深度に対応</p></li>
-<li><p>v.3.0.2 Beta    子分の保存に対応</p></li>
-<li><p>v.3.0.3 Beta    追尾・オートフォーカス・プログラムオート</p></li>
-<li><p>v.3.0.4         ファイル入出力に正式対応</p></li>
-<li><p>v.3.0.5 Beta    ファジィ撮る夫くん</p></li>
-<li><p>v.3.0.6 RC2     子分にAEオプションも保存(2019.12.5)</p></li>
-<li><p>v.3.0.7         太陽位置の操作パネルを実装。</p></li>
-</ul>
 <dl class="py function">
 <dt id="toruo.activate">
 <code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">activate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">ev</span></em>, <em class="sig-param"><span class="n">param</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#activate"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.activate" title="この定義へのパーマリンク">¶</a></dt>
@@ -421,6 +554,17 @@
               </div>
             </a>
           
+          
+            <a href="history.html" title="リリースノート"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> Next </span> リリースノート </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
           
         </a>
         
