@@ -11,7 +11,7 @@
 
 .. toctree::
    :caption: Contents
-   :maxdepth: 3
+   :maxdepth: 2
 
    クイックスタート <quickstart>
    リファレンス <toruo>
@@ -29,6 +29,16 @@
 
    Python 3.7 <https://docs.python.org/ja/3.7/index.html>
    VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
+
+ライセンスポリシー
+------------------
+
+撮る夫くんはMIT Licenseの下で公開しています。
+
+.. note::
+
+   - 撮る夫くんを利用したVRMNXレイアウトを配布する際，撮る夫くんを同梱することを推奨します。
+   - その際はユーザーの便宜を図るため，本マニュアルへのリンクを記述することを推奨します。
 
 検索と索引
 ------------------

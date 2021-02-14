@@ -259,7 +259,14 @@
     
     
       <a href="#id2" class="md-nav__link">ダウンロード</a>
+      <ul class="md-nav__list"> 
+    <li class="md-nav__item">
+    
+    
+      <a href="https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py" class="md-nav__link">toruo.py</a>
       
+    
+    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -475,9 +482,11 @@
 
 <h2 id="id2">ダウンロード<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <p>撮る夫くんのモジュールは以下のリンクからダウンロードできます:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py">toruo.py</a></p></li>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py">toruo.py</a></li>
 </ul>
+</div>
 <p><code class="docutils literal notranslate"><span class="pre">toruo.py</span></code> は，VRMNXがimport可能な場所に保存する必要があります。
 最もかんたんな場所は，撮る夫くんを使用する <strong>レイアウトファイルと同じディレクトリ</strong> です。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(root)
@@ -488,13 +497,17 @@
 
 
 <h2 id="id3">撮る夫くんを有効にする<a class="headerlink" href="#id3" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
-<code class="docutils literal notranslate"><span class="pre">activate()</span></code> を記述します。</p>
+<p>撮る夫くんを有効にするには，レイアウトスクリプトに2行書き加えます。</p>
+<p><img alt="fig1_レイアウトスクリプト" src="_images/fig1_layoutscript.png"/></p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">import</span></code> 文を記述します。</p></li>
+<li><p>イベントハンドラの冒頭に <code class="docutils literal notranslate"><span class="pre">activate()</span></code> を記述します。</p></li>
+</ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vrmnx</span>
-<span class="kn">import</span> <span class="nn">toruo</span>
+<span class="kn">import</span> <span class="nn">toruo</span> <span class="c1"># インポート文を記述する</span>
 
 <span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
-    <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
+    <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span> <span class="c1"># activateを記述する</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
         <span class="k">pass</span> 
     <span class="c1"># 以下省略</span>
@@ -503,8 +516,9 @@
 
 
 <h2 id="id4">撮る夫くんの操作方法<a class="headerlink" href="#id4" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<p>ビュワーで <code class="docutils literal notranslate"><span class="pre">p</span></code> キーを押すと撮る夫くんの操作パネルが開きます。
-もう一度 <code class="docutils literal notranslate"><span class="pre">p</span></code> キーを押すか，操作パネル下部の「メニューを閉じる」ボタンで
+<p>ビュワーで <code class="docutils literal notranslate"><span class="pre">p</span></code> キーを押すと撮る夫くんの操作パネルが開きます。</p>
+<p><img alt="fig2_撮る夫くん操作パネル" src="_images/fig2_toruowin.png"/></p>
+<p>もう一度 <code class="docutils literal notranslate"><span class="pre">p</span></code> キーを押すか，操作パネル下部の「メニューを閉じる」ボタンで
 撮る夫くんパネルが隠れます。</p>
 
 <h3 id="fov-field-of-view">FOV (Field of View)<a class="headerlink" href="#fov-field-of-view" title="このヘッドラインへのパーマリンク">¶</a></h3>
@@ -538,8 +552,11 @@
 <h2 id="id8">撮る夫くんの視点保存<a class="headerlink" href="#id8" title="このヘッドラインへのパーマリンク">¶</a></h2>
 <p>現在の視点を保存しておき，次回以降にビュワーを起動したときに
 ボタン操作で同じ視点を復元することができます。</p>
-<p>撮る夫くんを保存すると，レイアウトと同じファイルに toruo.json というファイルを生成します。
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<p>撮る夫くんを保存すると，レイアウトと同じファイルにtoruo.jsonというファイルを生成します。
 このファイルにカメラ座標などのデータが記録されています。</p>
+</div>
 
 
 

@@ -16,6 +16,9 @@ sys.path.insert(0, os.path.abspath('../'))
 #from unittest.mock import MagicMock
 #sys.modules['vrmapi'] = MagicMock()
 
+import recommonmark
+from recommonmark.transform import AutoStructify
+
 import toruo
 
 
@@ -36,7 +39,7 @@ release = toruo.__version__
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
+    #'sphinx.ext.autosummary',
     #'sphinx_automodapi.automodapi',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
@@ -113,3 +116,16 @@ html_sidebars = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 #html_static_path = ['_static']
+
+# app setup hook
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+        #'url_resolver': lambda url: github_doc_root + url,
+        #'auto_toc_tree_section': 'Contents',
+        #'enable_math': False,
+        #'enable_inline_math': False,
+        #'enable_eval_rst': True,
+        #'enable_auto_doc_ref': True,
+    }, True)
+    app.add_transform(AutoStructify)
