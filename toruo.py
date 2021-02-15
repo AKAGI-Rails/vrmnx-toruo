@@ -28,7 +28,7 @@ Example:
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'jump_toruo', 'setfactor', 'setshakemode']
-__version__ = '3.0.7'
+__version__ = '3.1.0'
 __author__ = "AKAGI"
 
 try:
@@ -58,7 +58,7 @@ _toruos = []     # 撮る夫くんたちのリスト
 _childid = [0]
 _systime = 0.0 # 前フレームの時刻を記録
 _shakemode = [False] # Trueで手ブレON
-_guidisp = 0       # TrueでGUI操作盤を表示
+_guidisp = 1       # TrueでGUI操作盤を表示
 _shake_vt = 0.0 # 手ブレの累積量
 _shake_hr = 0.0
 _shake_dvt = 0.0 # 手ブレの差分

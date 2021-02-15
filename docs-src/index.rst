@@ -16,6 +16,7 @@
    クイックスタート <quickstart>
    リファレンス <toruo>
    history
+   VRM Terminal Downloads <http://akagivrm.sokushinbutsu.com/download/>
 
 ダウンロード
 ----------------
@@ -27,8 +28,8 @@
 .. toctree::
    :caption: 外部リンク
 
-   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
    VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
+   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
 
 ライセンスポリシー
 ------------------

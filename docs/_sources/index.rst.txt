@@ -16,6 +16,7 @@
    クイックスタート <quickstart>
    リファレンス <toruo>
    history
+   VRM Terminal Downloads <http://akagivrm.sokushinbutsu.com/download/>
 
 ダウンロード
 ----------------
@@ -27,19 +28,18 @@
 .. toctree::
    :caption: 外部リンク
 
-   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
    VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
+   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
 
 ライセンスポリシー
 ------------------
 
 撮る夫くんはMIT Licenseの下で公開しています。
 
-補足事項
-^^^^^^^^
+.. note::
 
-- 撮る夫くんを利用したVRMNXレイアウトを配布する際，撮る夫くんを同梱することを推奨します。
-- その際はユーザーの便宜を図るため，本マニュアルへのリンクを記述することを推奨します。
+   - 撮る夫くんを利用したVRMNXレイアウトを配布する際，撮る夫くんを同梱することを推奨します。
+   - その際はユーザーの便宜を図るため，本マニュアルへのリンクを記述することを推奨します。
 
 検索と索引
 ------------------
