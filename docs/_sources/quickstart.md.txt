@@ -2,11 +2,11 @@
 
 ## ダウンロード
 
-撮る夫くんのモジュールは以下のリンクからダウンロードできます:
+撮る夫くんのモジュールは以下のリンクからダウンロードできます。
 
-* [toruo.py](https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py)
+- [toruo.py](https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py)
 
-`toruo.py` は，VRMNXがimport可能な場所に保存する必要があります。
+`toruo.py` は，VRMNXが`import`可能な場所に保存する必要があります。
 最もかんたんな場所は，撮る夫くんを使用する **レイアウトファイルと同じディレクトリ** です。
 
     (root)

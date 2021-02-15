@@ -25,12 +25,6 @@
 
 詳細なガイドは， `クイックスタート <quickstart>`_ をごらんください。
 
-.. toctree::
-   :caption: 外部リンク
-
-   VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
-   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
-
 ライセンスポリシー
 ------------------
 
@@ -47,3 +41,9 @@
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. toctree::
+   :caption: 外部リンク
+
+   VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
+   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
