@@ -11,7 +11,7 @@
 
 .. toctree::
    :caption: Contents
-   :maxdepth: 1
+   :titlesonly:
 
    クイックスタート <quickstart>
    リファレンス <toruo>
