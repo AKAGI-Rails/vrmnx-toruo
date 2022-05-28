@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""vrmapiのMock
+
+sphinx-apidocで撮る夫くんをビルドするときに，
+WindowsのPythonエンジンにvrmapiがないのでModuleNotFoundErrorが出る。
+エラーを回避するための最小限のコードを含むガワだけ用意しておくのが目的。
+"""
+
 import os
 from unittest.mock import MagicMock
 
@@ -23,3 +30,4 @@ class VRMSystem(object):
 
     def GetLayoutPath(self):
         return os.path.abspath('./foo.bar')
+    

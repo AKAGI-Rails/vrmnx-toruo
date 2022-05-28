@@ -1,8 +1,10 @@
 /.vs
-docs/make.bat
-docs/Makefile
+/.vscode
+Makefile
+make.bat
 /pic
-/*.vrmnx
-/toruo.json
+*.vrmnx
+toruo.json
 /__pycache__
 /release
+/docs/html

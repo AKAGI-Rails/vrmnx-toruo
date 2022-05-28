@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
-"""撮る夫くん
+"""撮る夫くん - VRMNX用グローバルカメラ拡張機能
 
-VRMNXでグローバルカメラの高機能な操作システムを提供します。
+VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。
+ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行うことができます。
+
+撮る夫くんには以下のような機能があります。
+
+- FOVなどのGUI操作
+- FOV, F値と対象物までの距離から，一眼レフカメラの機構をシミュレートした被写界深度制御
+- 手ブレ風エフェクト
+- 車両追尾
+- 視点保存
 
 Example:
     撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
@@ -15,20 +24,12 @@ Example:
             if ev == 'init':
                 pass
     
-
-* v.3.0.0 Beta    NX用初版
-* v.3.0.1 Beta    被写界深度に対応
-* v.3.0.2 Beta    子分の保存に対応
-* v.3.0.3 Beta    追尾・オートフォーカス・プログラムオート
-* v.3.0.4         ファイル入出力に正式対応
-* v.3.0.5 Beta    ファジィ撮る夫くん
-* v.3.0.6 RC2     子分にAEオプションも保存(2019.12.5)
-* v.3.0.7         太陽位置の操作パネルを実装。
 """
-__version__ = '3.0.7'
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'jump_toruo', 'setfactor', 'setshakemode']
+__version__ = '3.1.0'
+__author__ = "AKAGI"
 
 try:
     import vrmapi
@@ -57,7 +58,7 @@ _toruos = []     # 撮る夫くんたちのリスト
 _childid = [0]
 _systime = 0.0 # 前フレームの時刻を記録
 _shakemode = [False] # Trueで手ブレON
-_guidisp = 0       # TrueでGUI操作盤を表示
+_guidisp = 1       # TrueでGUI操作盤を表示
 _shake_vt = 0.0 # 手ブレの累積量
 _shake_hr = 0.0
 _shake_dvt = 0.0 # 手ブレの差分
