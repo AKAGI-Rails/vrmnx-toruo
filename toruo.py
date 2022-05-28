@@ -129,7 +129,7 @@ def activate(obj, ev, param):
     
     レイアウトオブジェクトのイベントハンドラの先頭に書いてください（ifの中には入れない）::
     
-        import vrmnx
+        import vrmapi
         import toruo
         
         def vrmevent(obj,ev,param):
