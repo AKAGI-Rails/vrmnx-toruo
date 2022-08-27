@@ -1,6 +1,5 @@
 /.vs
 /.vscode
-/pic
 
 *.vrmnx
 *.bak
@@ -8,6 +7,4 @@ toruo.json
 
 /__pycache__
 /release
-/docs/html
-
-vrmapi.py
+/_build

@@ -46,7 +46,7 @@
   
   
   
-    <title>撮る夫くん リファレンス &#8212; 撮る夫くん 3.1.0 ドキュメント</title>
+    <title>撮る夫くん リファレンス &#8212; 撮る夫くん 3.1.1 ドキュメント</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -56,10 +56,7 @@
     <script src="_static/translations.js"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
-<<<<<<< HEAD:docs/build/html/toruo.html
-=======
     <link rel="next" title="リリースノート" href="history.html" />
->>>>>>> 85437c47041a7d1656efabcbab5f5b76745f975d:docs/toruo.html
     <link rel="prev" title="撮る夫くん クイックスタート" href="quickstart.html" />
   
    
@@ -84,7 +81,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="撮る夫くん 3.1.0 ドキュメント"
+        <a href="index.html" title="撮る夫くん 3.1.1 ドキュメント"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">videocam</i>
@@ -170,7 +167,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">撮る夫くん 3.1.0 ドキュメント</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">撮る夫くん 3.1.1 ドキュメント</a></li>
       </ul>
     </div>
   </nav>
@@ -182,13 +179,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="撮る夫くん 3.1.0 ドキュメント" class="md-nav__button md-logo">
+    <a href="index.html" title="撮る夫くん 3.1.1 ドキュメント" class="md-nav__button md-logo">
       
         <i class="md-icon">videocam</i>
       
     </a>
     <a href="index.html"
-       title="撮る夫くん 3.1.0 ドキュメント">撮る夫くん</a>
+       title="撮る夫くん 3.1.1 ドキュメント">撮る夫くん</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/AKAGI-Rails/vrmnx-toruo" title="Go to repository" class="md-source" data-md-source="github">
@@ -322,7 +319,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 </ul>
 <p class="rubric">サンプル</p>
 <p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
-<code class="docutils literal notranslate"><span class="pre">activate()</span></code> を記述します:</p>
+<cite>toruo.activate()</cite> を記述します:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vrmnx</span>
 <span class="kn">import</span> <span class="nn">toruo</span>
 
@@ -332,6 +329,12 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
         <span class="k">pass</span>
 </pre></div>
 </div>
+<p># イベントのuserIDの予約領域</p>
+<p>撮る夫くんでは，VRMNXのイベントuserIDで以下の領域を予約します。:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1060000</span> <span class="o">-</span> <span class="mi">1069999</span>
+</pre></div>
+</div>
+<p>撮る夫くんが内部で使用するイベントはこの領域内でuserIDを指定しています。</p>
 <dl class="py function">
 <dt id="toruo.activate">
 <code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">activate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">ev</span></em>, <em class="sig-param"><span class="n">param</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#activate"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.activate" title="この定義へのパーマリンク">¶</a></dt>
