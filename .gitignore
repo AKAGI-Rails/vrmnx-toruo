@@ -1,10 +1,13 @@
 /.vs
 /.vscode
-Makefile
-make.bat
 /pic
+
 *.vrmnx
+*.bak
 toruo.json
+
 /__pycache__
 /release
 /docs/html
+
+vrmapi.py
