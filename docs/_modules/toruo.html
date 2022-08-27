@@ -46,7 +46,7 @@
   
   
   
-    <title>toruo &#8212; 撮る夫くん 3.1.0 ドキュメント</title>
+    <title>toruo &#8212; 撮る夫くん 3.1.1 ドキュメント</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/material.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -79,7 +79,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="撮る夫くん 3.1.0 ドキュメント"
+        <a href="../index.html" title="撮る夫くん 3.1.1 ドキュメント"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">videocam</i>
@@ -165,7 +165,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">撮る夫くん 3.1.0 ドキュメント</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">撮る夫くん 3.1.1 ドキュメント</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">モジュールコード</a></li>
       </ul>
     </div>
@@ -178,13 +178,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="撮る夫くん 3.1.0 ドキュメント" class="md-nav__button md-logo">
+    <a href="../index.html" title="撮る夫くん 3.1.1 ドキュメント" class="md-nav__button md-logo">
       
         <i class="md-icon">videocam</i>
       
     </a>
     <a href="../index.html"
-       title="撮る夫くん 3.1.0 ドキュメント">撮る夫くん</a>
+       title="撮る夫くん 3.1.1 ドキュメント">撮る夫くん</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/AKAGI-Rails/vrmnx-toruo" title="Go to repository" class="md-source" data-md-source="github">
@@ -307,7 +307,7 @@
 
 <span class="sd">Example:</span>
 <span class="sd">    撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に</span>
-<span class="sd">    ``activate()`` を記述します::</span>
+<span class="sd">    `toruo.activate()` を記述します::</span>
 <span class="sd">    </span>
 <span class="sd">        import vrmnx</span>
 <span class="sd">        import toruo</span>
@@ -317,11 +317,18 @@
 <span class="sd">            if ev == 'init':</span>
 <span class="sd">                pass</span>
 <span class="sd">    </span>
+<span class="sd"># イベントのuserIDの予約領域</span>
+
+<span class="sd">撮る夫くんでは，VRMNXのイベントuserIDで以下の領域を予約します。::</span>
+
+<span class="sd">    1060000 - 1069999</span>
+
+<span class="sd">撮る夫くんが内部で使用するイベントはこの領域内でuserIDを指定しています。</span>
 <span class="sd">"""</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DEBUG'</span><span class="p">,</span> <span class="s1">'dFOV'</span><span class="p">,</span> <span class="s1">'dRot'</span><span class="p">,</span> <span class="s1">'dMov'</span><span class="p">,</span> <span class="s1">'shake_factor'</span><span class="p">,</span> <span class="s1">'shake_freq'</span><span class="p">,</span>
            <span class="s1">'activate'</span><span class="p">,</span> <span class="s1">'jump_toruo'</span><span class="p">,</span> <span class="s1">'setfactor'</span><span class="p">,</span> <span class="s1">'setshakemode'</span><span class="p">]</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.1.0'</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.1.1'</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">"AKAGI"</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -342,22 +349,22 @@
 <span class="n">IMGUI</span> <span class="o">=</span> <span class="n">vrmapi</span><span class="o">.</span><span class="n">ImGui</span><span class="p">()</span>
 <span class="n">DIRECTORY</span><span class="p">,</span> <span class="n">BASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">NXSYS</span><span class="o">.</span><span class="n">GetLayoutPath</span><span class="p">())</span>
 <span class="c1">#LOG(BASE)</span>
-<span class="c1"># LAYOUTにFrameイベントを登録</span>
-<span class="n">LAYOUT</span><span class="o">.</span><span class="n">SetEventFrame</span><span class="p">()</span>
 
-<span class="n">_PARENT</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># 親オブジェクト</span>
-<span class="c1">#_gcam = []       # 地上カメラのリスト</span>
-<span class="n">_toruos</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1"># 撮る夫くんたちのリスト</span>
+<span class="c1"># フレームイベントの設定は activate イベントハンドラでinitのタイミングに移動</span>
+
+<span class="n">_PARENT</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># 親オブジェクト</span>
+<span class="c1">#_gcam = []     # 地上カメラのリスト</span>
+<span class="n">_toruos</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># 撮る夫くんたちのリスト</span>
 <span class="n">_childid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">_systime</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># 前フレームの時刻を記録</span>
+<span class="n">_systime</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># 前フレームの時刻を記録</span>
 <span class="n">_shakemode</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="c1"># Trueで手ブレON</span>
-<span class="n">_guidisp</span> <span class="o">=</span> <span class="mi">1</span>       <span class="c1"># TrueでGUI操作盤を表示</span>
-<span class="n">_shake_vt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># 手ブレの累積量</span>
+<span class="n">_guidisp</span> <span class="o">=</span> <span class="mi">1</span>         <span class="c1"># TrueでGUI操作盤を表示</span>
+<span class="n">_shake_vt</span> <span class="o">=</span> <span class="mf">0.0</span>      <span class="c1"># 手ブレの累積量</span>
 <span class="n">_shake_hr</span> <span class="o">=</span> <span class="mf">0.0</span>
-<span class="n">_shake_dvt</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># 手ブレの差分</span>
+<span class="n">_shake_dvt</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># 手ブレの差分</span>
 <span class="n">_shake_dhr</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">_shake_evid</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">_aemode</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>   <span class="c1"># プログラムオート</span>
+<span class="n">_aemode</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>    <span class="c1"># プログラムオート</span>
 <span class="n">_aeparam</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'blurfin'</span><span class="p">:[</span><span class="mf">90.0</span><span class="p">],</span> <span class="s1">'ftg'</span><span class="p">:[</span><span class="mf">5.0</span><span class="o">/</span><span class="mi">12</span><span class="p">],</span> <span class="s1">'f10'</span><span class="p">:[</span><span class="mf">25.0</span><span class="p">]}</span>
 <span class="n">_sunpos</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">45</span><span class="p">]]</span> <span class="c1"># 太陽位置(緯度,経度)</span>
 
@@ -440,10 +447,9 @@
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
         <span class="k">global</span> <span class="n">_PARENT</span>
         <span class="n">_PARENT</span> <span class="o">=</span> <span class="n">obj</span>
-        <span class="c1">#global DIRECTORY</span>
-        <span class="c1">#DIRECTORY = NXSYS.GetLayoutDir()</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">SetEventFrame</span><span class="p">(</span><span class="mi">106000</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">SetEventKeyDown</span><span class="p">(</span><span class="s1">'P'</span><span class="p">,</span> <span class="mi">106001</span><span class="p">)</span>
         <span class="n">_load_config</span><span class="p">()</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">SetEventKeyDown</span><span class="p">(</span><span class="s1">'P'</span><span class="p">)</span>
         <span class="n">_refresh_trainlist</span><span class="p">()</span>
         <span class="n">vrmapi</span><span class="o">.</span><span class="n">LOG</span><span class="p">(</span><span class="s1">'撮る夫くん(Ver.</span><span class="si">{}</span><span class="s1">) stand by. </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__version__</span><span class="p">,</span> <span class="n">DIRECTORY</span><span class="p">))</span>
         <span class="k">return</span>
@@ -563,7 +569,7 @@
     <span class="n">_shake_dhr</span> <span class="o">=</span> <span class="n">triangular</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">shake_factor</span><span class="p">,</span> <span class="n">shake_factor</span><span class="p">)</span>
     <span class="n">_shake_dvt</span> <span class="o">=</span> <span class="n">triangular</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">shake_factor</span><span class="p">,</span> <span class="n">shake_factor</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">_shakemode</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="n">_shake_evid</span> <span class="o">=</span> <span class="n">_PARENT</span><span class="o">.</span><span class="n">SetEventAfter</span><span class="p">(</span><span class="n">triangular</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">shake_freq</span><span class="p">))</span>
+        <span class="n">_shake_evid</span> <span class="o">=</span> <span class="n">_PARENT</span><span class="o">.</span><span class="n">SetEventAfter</span><span class="p">(</span><span class="n">triangular</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">shake_freq</span><span class="p">),</span> <span class="mi">1060101</span><span class="p">)</span>
             
 <span class="k">def</span> <span class="nf">_save_toruo</span><span class="p">():</span>
     <span class="sd">"""現在視点を保存。"""</span>
