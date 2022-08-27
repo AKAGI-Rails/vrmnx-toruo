@@ -14,7 +14,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 
 Example:
     撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
-    ``activate()`` を記述します::
+    `toruo.activate()` を記述します::
     
         import vrmnx
         import toruo
@@ -24,11 +24,18 @@ Example:
             if ev == 'init':
                 pass
     
+# イベントのuserIDの予約領域
+
+撮る夫くんでは，VRMNXのイベントuserIDで以下の領域を予約します。::
+
+    1060000 - 1069999
+
+撮る夫くんが内部で使用するイベントはこの領域内でuserIDを指定しています。
 """
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'jump_toruo', 'setfactor', 'setshakemode']
-__version__ = '3.1.0'
+__version__ = '3.1.1'
 __author__ = "AKAGI"
 
 try:
@@ -49,22 +56,22 @@ NXSYS = vrmapi.SYSTEM()
 IMGUI = vrmapi.ImGui()
 DIRECTORY, BASE = os.path.split(NXSYS.GetLayoutPath())
 #LOG(BASE)
-# LAYOUTにFrameイベントを登録
-LAYOUT.SetEventFrame()
 
-_PARENT = None     # 親オブジェクト
-#_gcam = []       # 地上カメラのリスト
-_toruos = []     # 撮る夫くんたちのリスト
+# フレームイベントの設定は activate イベントハンドラでinitのタイミングに移動
+
+_PARENT = None  # 親オブジェクト
+#_gcam = []     # 地上カメラのリスト
+_toruos = []    # 撮る夫くんたちのリスト
 _childid = [0]
-_systime = 0.0 # 前フレームの時刻を記録
+_systime = 0.0  # 前フレームの時刻を記録
 _shakemode = [False] # Trueで手ブレON
-_guidisp = 1       # TrueでGUI操作盤を表示
-_shake_vt = 0.0 # 手ブレの累積量
+_guidisp = 1         # TrueでGUI操作盤を表示
+_shake_vt = 0.0      # 手ブレの累積量
 _shake_hr = 0.0
-_shake_dvt = 0.0 # 手ブレの差分
+_shake_dvt = 0.0     # 手ブレの差分
 _shake_dhr = 0.0
 _shake_evid = None
-_aemode = [False]   # プログラムオート
+_aemode = [False]    # プログラムオート
 _aeparam = {'blurfin':[90.0], 'ftg':[5.0/12], 'f10':[25.0]}
 _sunpos = [[0], [45]] # 太陽位置(緯度,経度)
 
@@ -147,10 +154,9 @@ def activate(obj, ev, param):
     if ev == 'init':
         global _PARENT
         _PARENT = obj
-        #global DIRECTORY
-        #DIRECTORY = NXSYS.GetLayoutDir()
+        obj.SetEventFrame(106000)
+        obj.SetEventKeyDown('P', 106001)
         _load_config()
-        obj.SetEventKeyDown('P')
         _refresh_trainlist()
         vrmapi.LOG('撮る夫くん(Ver.{}) stand by. {}'.format(__version__, DIRECTORY))
         return
@@ -270,7 +276,7 @@ def _update_shake():
     _shake_dhr = triangular(-1*shake_factor, shake_factor)
     _shake_dvt = triangular(-1*shake_factor, shake_factor)
     if _shakemode[0]:
-        _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq))
+        _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq), 1060101)
             
 def _save_toruo():
     """現在視点を保存。"""
