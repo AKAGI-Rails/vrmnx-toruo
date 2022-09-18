@@ -34,7 +34,7 @@ Example:
 """
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
-           'activate', 'jump_toruo', 'setfactor', 'setshakemode']
+           'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',]
 __version__ = '3.2.0'
 __author__ = "AKAGI"
 
