@@ -46,7 +46,7 @@
   
   
   
-    <title>撮る夫くん リファレンス &#8212; 撮る夫くん 3.1.1 ドキュメント</title>
+    <title>撮る夫くん リファレンス &#8212; 撮る夫くん 3.2.0 ドキュメント</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/material.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -81,7 +81,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="撮る夫くん 3.1.1 ドキュメント"
+        <a href="index.html" title="撮る夫くん 3.2.0 ドキュメント"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">videocam</i>
@@ -167,7 +167,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">撮る夫くん 3.1.1 ドキュメント</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">撮る夫くん 3.2.0 ドキュメント</a></li>
       </ul>
     </div>
   </nav>
@@ -179,13 +179,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="撮る夫くん 3.1.1 ドキュメント" class="md-nav__button md-logo">
+    <a href="index.html" title="撮る夫くん 3.2.0 ドキュメント" class="md-nav__button md-logo">
       
         <i class="md-icon">videocam</i>
       
     </a>
     <a href="index.html"
-       title="撮る夫くん 3.1.1 ドキュメント">撮る夫くん</a>
+       title="撮る夫くん 3.2.0 ドキュメント">撮る夫くん</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/AKAGI-Rails/vrmnx-toruo" title="Go to repository" class="md-source" data-md-source="github">
@@ -339,14 +339,15 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <dt id="toruo.activate">
 <code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">activate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">ev</span></em>, <em class="sig-param"><span class="n">param</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#activate"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.activate" title="この定義へのパーマリンク">¶</a></dt>
 <dd><p>撮る夫くんを有効にするコマンド。</p>
-<p>レイアウトオブジェクトのイベントハンドラの先頭に書いてください（ifの中には入れない）:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vrmapi</span>
+<p>レイアウトオブジェクトのイベントハンドラの先頭に書いてください。（ifの中には入れない。）:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># LAYOUT</span>
+<span class="kn">import</span> <span class="nn">vrmapi</span>
 <span class="kn">import</span> <span class="nn">toruo</span>
 
 <span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
     <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="k">pass</span> <span class="c1"># 以下省略</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -358,6 +359,8 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 </ul>
 </dd>
 </dl>
+<p>撮る夫くんの関係イベントはすべてこの関数の中で処理されます。
+<cite>vrmevent</cite> が受け取ったパラメータをそのまま引き渡してください。</p>
 </dd></dl>
 <dl class="py data">
 <dt id="toruo.dFOV">
@@ -388,11 +391,12 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <p>保存された撮る夫くんの内容は，レイアウトと同じディレクトリの toruo.json に記録されています。
 リスト型で読み出されるので，先頭のデータがid=0になります。</p>
 </div>
+<p>この関数は，実行時に撮る夫くん座標に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。</p>
 </dd></dl>
 <dl class="py function">
 <dt id="toruo.setfactor">
 <code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">setfactor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rotate</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">fov</span><span class="o">=</span><span class="default_value">10.0</span></em>, <em class="sig-param"><span class="n">move</span><span class="o">=</span><span class="default_value">25.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#setfactor"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.setfactor" title="この定義へのパーマリンク">¶</a></dt>
-<dd><p>キー操作と手ブレのパラメータを設定</p>
+<dd><p>キー操作と手ブレの感度パラメータを設定</p>
 <p>v.3.0.7ではmoveは不使用です。</p>
 <dl class="field-list simple">
 <dt class="field-odd">パラメータ</dt>
