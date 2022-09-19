@@ -102,8 +102,10 @@ _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
 
-EVUID_TORUOFRAME = 106000
-EVUID_TORUOSWITCH = 106001
+# Event UserID
+EVUID_TORUOFRAME = 1060000
+EVUID_TORUOSWITCH = 1060001
+EVUID_TORUOSHAKE = 1060101
 
 def activate(obj, ev, param):
     """撮る夫くんを有効にするコマンド。
@@ -147,7 +149,8 @@ def activate(obj, ev, param):
             _guidisp = not _guidisp
         return
 
-    if not (ev == 'frame' and param['eventUID'] == EVUID_TORUOFRAME):
+    #if not (ev == 'frame' and param['eventUID'] == EVUID_TORUOFRAME):
+    if ev != 'frame':
         # 撮る夫くんのフレームイベント以外ではreturn
         return
 
@@ -359,7 +362,7 @@ def _update_shake():
     _shake_dhr = triangular(-1*shake_factor, shake_factor)
     _shake_dvt = triangular(-1*shake_factor, shake_factor)
     if _shakemode[0]:
-        _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq), 1060101)
+        _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq), EVUID_TORUOSHAKE)
             
 
 def _save_toruo():
