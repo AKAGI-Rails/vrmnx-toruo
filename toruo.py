@@ -143,7 +143,7 @@ def activate(obj, ev, param):
         _update_shake()
         return
     elif ev == 'keydown':
-        if param['eventUID'] == EVUID_TORUOSWITCH:
+        if param['keycode'] == 'P':
             # GUI表示のON/OFFを切替
             global _guidisp
             _guidisp = not _guidisp
