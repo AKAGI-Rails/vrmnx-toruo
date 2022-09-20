@@ -319,7 +319,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 </ul>
 <p class="rubric">サンプル</p>
 <p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
-<cite>toruo.activate()</cite> を記述します:</p>
+<code class="docutils literal notranslate"><span class="pre">toruo.activate()</span></code> を記述します:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vrmnx</span>
 <span class="kn">import</span> <span class="nn">toruo</span>
 
@@ -329,7 +329,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
         <span class="k">pass</span>
 </pre></div>
 </div>
-<p># イベントのuserIDの予約領域</p>
+<p>イベントのuserIDの予約領域</p>
 <p>撮る夫くんでは，VRMNXのイベントuserIDで以下の領域を予約します。:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1060000</span> <span class="o">-</span> <span class="mi">1069999</span>
 </pre></div>
@@ -381,9 +381,10 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <dt id="toruo.jump_toruo">
 <code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">jump_toruo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#jump_toruo"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.jump_toruo" title="この定義へのパーマリンク">¶</a></dt>
 <dd><p>保存済みの撮る夫くん座標にジャンプ</p>
-<p>保存済みの撮る夫くんを``id``で呼び出し，その座標にジャンプします。</p>
-<dl class="simple">
-<dt>Arg:</dt><dd><p>id (int): 撮る夫くんの保存番号</p>
+<p>保存済みの撮る夫くんを <code class="docutils literal notranslate"><span class="pre">id</span></code> で呼び出し，その座標にジャンプします。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) -- 撮る夫くんの保存番号</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -392,6 +393,49 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 リスト型で読み出されるので，先頭のデータがid=0になります。</p>
 </div>
 <p>この関数は，実行時に撮る夫くん座標に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。</p>
+</dd></dl>
+<dl class="py function">
+<dt id="toruo.set_gcdist">
+<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">set_gcdist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dist</span><span class="o">=</span><span class="default_value">256.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#set_gcdist"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.set_gcdist" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>グローバルカメラのfrom-toの距離を再設定する。</p>
+<p>現在の視線の向きをキープして，グローバルカメラのat座標を
+from座標からの指定距離に再設定する。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><p><strong>dist</strong> -- from-toの距離(mm)</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt id="toruo.set_toruo">
+<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">set_toruo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fov</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">depth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fnum</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">blur</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">aemode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#set_toruo"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.set_toruo" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>撮る夫くんの状態を直接指定する。</p>
+<p>撮る夫くんの撮影設定パラメータを直接指定できます。
+入力パラメータはどれも省略可です。必要な項目だけキーワード引数で指定してください。</p>
+<dl class="field-list simple">
+<dt class="field-odd">パラメータ</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fov</strong> (<em>float</em>) -- FOV（ズーム角度）</p></li>
+<li><p><strong>depth</strong> (<em>float</em>) -- 合焦中心位置までの距離の逆数の4乗根</p></li>
+<li><p><strong>fnum</strong> (<em>float</em>) -- 絞り（F値）</p></li>
+<li><p><strong>blur</strong> (<em>float</em>) -- ぼけの強さ</p></li>
+<li><p><strong>aemode</strong> (<em>bool</em>) -- プログラムAE</p></li>
+</ul>
+</dd>
+</dl>
+<p>この関数は，実行時に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。</p>
+<p>たとえば， initイベントで実行すると初期状態の撮る夫くんの設定ができます。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># LAYOUT</span>
+<span class="kn">import</span> <span class="nn">vrmapi</span>
+<span class="kn">import</span> <span class="nn">toruo</span>
+
+<span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+    <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
+        <span class="n">toruo</span><span class="o">.</span><span class="n">set_toruo</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">512</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">),</span> <span class="n">fnum</span><span class="o">=</span><span class="mf">9.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>カメラ座標は <code class="docutils literal notranslate"><span class="pre">vrmapi.SYSTEM().SetGlobalCameraPos()</span></code> によってください。</p>
 </dd></dl>
 <dl class="py function">
 <dt id="toruo.setfactor">
