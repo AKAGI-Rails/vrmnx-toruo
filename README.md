@@ -11,7 +11,7 @@ VRMNX用Python拡張の「撮る夫くん」は，VRMNXビュワーのフライ�
 
 ## ダウンロード
 
-[toruo.py](https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py)
+[toruo.py](toruo.py)
 
 ## ユーザーズマニュアル
 
@@ -24,8 +24,6 @@ VRMNX用Python拡張の「撮る夫くん」は，VRMNXビュワーのフライ�
 撮る夫くんはMIT Licenseの下で公開しています。
 
 ```note::
-
     - 撮る夫くんを利用したVRMNXレイアウトを配布する際，撮る夫くんを同梱することを妨げません。
     - その際はユーザーの便宜を図るため，本マニュアルへのリンクを記述することを推奨します。
 ```
-

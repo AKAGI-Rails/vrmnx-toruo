@@ -1,4 +1,27 @@
 # -*- coding: utf-8 -*-
+
+# MIT License
+#
+# Copyright (c) 2021 AKAGI-Rails
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """撮る夫くん - VRMNX用グローバルカメラ拡張機能
 
 VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。
@@ -14,7 +37,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 
 Example:
     撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
-    `toruo.activate()` を記述します::
+    ``toruo.activate()`` を記述します::
     
         import vrmnx
         import toruo
@@ -24,7 +47,7 @@ Example:
             if ev == 'init':
                 pass
     
-# イベントのuserIDの予約領域
+イベントのuserIDの予約領域
 
 撮る夫くんでは，VRMNXのイベントuserIDで以下の領域を予約します。::
 
@@ -34,8 +57,8 @@ Example:
 """
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
-           'activate', 'jump_toruo', 'setfactor', 'setshakemode']
-__version__ = '3.1.1'
+           'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',]
+__version__ = '3.2.0'
 __author__ = "AKAGI"
 
 try:
@@ -49,7 +72,7 @@ from random import triangular
 import json
 import os.path
 
-DEBUG = False
+DEBUG = True
 
 LAYOUT = vrmapi.LAYOUT()
 NXSYS = vrmapi.SYSTEM()
@@ -65,7 +88,7 @@ _toruos = []    # 撮る夫くんたちのリスト
 _childid = [0]
 _systime = 0.0  # 前フレームの時刻を記録
 _shakemode = [False] # Trueで手ブレON
-_guidisp = 1         # TrueでGUI操作盤を表示
+_guidisp = True      # TrueでGUI操作盤を表示
 _shake_vt = 0.0      # 手ブレの累積量
 _shake_hr = 0.0
 _shake_dvt = 0.0     # 手ブレの差分
@@ -74,13 +97,14 @@ _shake_evid = None
 _aemode = [False]    # プログラムオート
 _aeparam = {'blurfin':[90.0], 'ftg':[5.0/12], 'f10':[25.0]}
 _sunpos = [[0], [45]] # 太陽位置(緯度,経度)
+_gcdist = [256.0]    # グローバルカメラのfrom-to距離設定値（リアルタイムではない）
 
 # DOF(被写界深度)がらみのパラメタ
 _fov = [45.0]
-_depth = [0.25]         # 合焦中心距離の逆数の4乗根
-_fnum = [50.0]          # F値
-_blur = [1.0]
-_delta = [0.0008, 0.08] # 錯乱円径
+_depth = [0.25]          # 合焦中心距離までの逆数の4乗根
+_fnum = [50.0]           # F値
+_blur = [1.0]            # ぼけの強さ
+_delta = [0.0008, 0.08]  # 錯乱円径
 
 # 設定値（公開プロパティ）
 dFOV = 10.0         #: FOV操作感度
@@ -101,61 +125,38 @@ _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
 
-def jump_toruo(id=0):
-    """保存済みの撮る夫くん座標にジャンプ
-    
-    保存済みの撮る夫くんを``id``で呼び出し，その座標にジャンプします。
-    
-    Arg:
-        id (int): 撮る夫くんの保存番号
-        
-    Note:
-        保存された撮る夫くんの内容は，レイアウトと同じディレクトリの toruo.json に記録されています。
-        リスト型で読み出されるので，先頭のデータがid=0になります。
-    """
-    global _fov
-    global _depth
-    global _fnum
-    global _blur
-    global _aemode
-    global _aeparam
-    d = _toruos[id]
-    NXSYS.SetGlobalCameraPos(d['pos'])
-    _fov[0] = d['fov']
-    _depth[0] = d['depth']
-    _fnum[0] = d['fnum']
-    _blur[0] = d['blur']
-    try:
-        _aemode[0] = d['aemode']
-        _aeparam = d['aeparam']
-    except KeyError:
-        pass
-    _focus()
+# Event UserID
+EVUID_TORUOFRAME = 1060000
+EVUID_TORUOSWITCH = 1060001
+EVUID_TORUOSHAKE = 1060101
 
 def activate(obj, ev, param):
     """撮る夫くんを有効にするコマンド。
     
-    レイアウトオブジェクトのイベントハンドラの先頭に書いてください（ifの中には入れない）::
+    レイアウトオブジェクトのイベントハンドラの先頭に書いてください。（ifの中には入れない。）::
     
+        # LAYOUT
         import vrmapi
         import toruo
         
         def vrmevent(obj,ev,param):
             toruo.activate(obj,ev,param)
             if ev == 'init':
-                pass
+                pass # 以下省略
             
     Args:
         obj:    イベントハンドラが受け取るobj
         ev:     イベントハンドラが受け取るev
         param:  イベントハンドラが受け取るparam
-        
+
+    撮る夫くんの関係イベントはすべてこの関数の中で処理されます。
+    `vrmevent` が受け取ったパラメータをそのまま引き渡してください。
     """
     if ev == 'init':
         global _PARENT
         _PARENT = obj
-        obj.SetEventFrame(106000)
-        obj.SetEventKeyDown('P', 106001)
+        obj.SetEventFrame(EVUID_TORUOFRAME)
+        obj.SetEventKeyDown('P', EVUID_TORUOSWITCH)
         _load_config()
         _refresh_trainlist()
         vrmapi.LOG('撮る夫くん(Ver.{}) stand by. {}'.format(__version__, DIRECTORY))
@@ -166,12 +167,14 @@ def activate(obj, ev, param):
         return
     elif ev == 'keydown':
         if param['keycode'] == 'P':
-            # GUI表示をON/OFF
+            # GUI表示のON/OFFを切替
             global _guidisp
-            _guidisp = (_guidisp+1)%2
+            _guidisp = not _guidisp
         return
 
+    #if not (ev == 'frame' and param['eventUID'] == EVUID_TORUOFRAME):
     if ev != 'frame':
+        # 撮る夫くんのフレームイベント以外ではreturn
         return
 
     if _guidisp:
@@ -180,6 +183,8 @@ def activate(obj, ev, param):
         return
     ftime = _updateframetime(param['eventtime'])
     campos = NXSYS.GetGlobalCameraPos()
+
+    # キー操作の処理
     global _shake_hr
     global _shake_vt
 
@@ -204,7 +209,7 @@ def activate(obj, ev, param):
         _rotate(campos, 1, ftime)
 
     # 追尾処理
-    istracking = False
+    istracking = False  # 初期化
 
     if _tracking_mode[0] and _tracking_car:
         if _fuzzytrack[0]:
@@ -238,8 +243,90 @@ def activate(obj, ev, param):
     NXSYS.SetGlobalCameraPos(campos)
 
 
+def jump_toruo(id=0):
+    """保存済みの撮る夫くん座標にジャンプ
+    
+    保存済みの撮る夫くんを ``id`` で呼び出し，その座標にジャンプします。
+    
+    Args:
+        id (int): 撮る夫くんの保存番号
+        
+    Note:
+        保存された撮る夫くんの内容は，レイアウトと同じディレクトリの toruo.json に記録されています。
+        リスト型で読み出されるので，先頭のデータがid=0になります。
+
+    この関数は，実行時に撮る夫くん座標に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。
+    """
+    global _fov
+    global _depth
+    global _fnum
+    global _blur
+    global _aemode
+    global _aeparam
+    d = _toruos[id]
+    NXSYS.SetGlobalCameraPos(d['pos'])
+    _fov[0] = d['fov']
+    _depth[0] = d['depth']
+    _fnum[0] = d['fnum']
+    _blur[0] = d['blur']
+    try:
+        _aemode[0] = d['aemode']
+        _aeparam = d['aeparam']
+    except KeyError:
+        pass
+    _focus()
+
+
+def set_toruo(fov=None, depth=None, fnum=None, blur=None, aemode=None):
+    """撮る夫くんの状態を直接指定する。
+    
+    撮る夫くんの撮影設定パラメータを直接指定できます。
+    入力パラメータはどれも省略可です。必要な項目だけキーワード引数で指定してください。
+
+    Parameters:
+        fov (float): FOV（ズーム角度）
+        depth (float): 合焦中心位置までの距離の逆数の4乗根
+        fnum (float): 絞り（F値）
+        blur (float): ぼけの強さ
+        aemode (bool): プログラムAE
+    
+    この関数は，実行時に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。
+
+    たとえば， initイベントで実行すると初期状態の撮る夫くんの設定ができます。 ::
+
+        # LAYOUT
+        import vrmapi
+        import toruo
+
+        def vrmevent(obj,ev,param):
+            toruo.activate(obj,ev,param)
+            if ev == 'init':
+                toruo.set_toruo(depth=512**(-1/4), fnum=9.0)
+
+    カメラ座標は ``vrmapi.SYSTEM().SetGlobalCameraPos()`` によってください。
+        
+    """
+    global _fov
+    global _depth
+    global _fnum
+    global _blur
+    global _aemode
+    global _aeparam
+    if fov is not None:
+        _fov[0] = fov
+    if depth is not None:
+        _depth[0] = depth
+    if fnum is not None:
+        _fnum[0] = fnum
+    if blur is not None:
+        _blur[0] = blur
+    if aemode is not None:
+        _aemode[0] = aemode
+    _focus()
+
+
 def setfactor(rotate=0.5, fov=10.0, move=25.0):
-    """キー操作と手ブレのパラメータを設定
+    """キー操作と手ブレの感度パラメータを設定
     
     v.3.0.7ではmoveは不使用です。 
     
@@ -255,6 +342,7 @@ def setfactor(rotate=0.5, fov=10.0, move=25.0):
     dFOV = fov
     dMov = move
 
+
 def setshakemode(mode=False):
     """手ブレモードを設定
     
@@ -269,6 +357,27 @@ def setshakemode(mode=False):
     _shakemode[0] = mode
     _update_shake()
 
+
+def set_gcdist(dist=256.0):
+    """グローバルカメラのfrom-toの距離を再設定する。
+    
+    現在の視線の向きをキープして，グローバルカメラのat座標を
+    from座標からの指定距離に再設定する。
+
+    Parameters:
+        dist: from-toの距離(mm)
+    """
+    pos = NXSYS.GetGlobalCameraPos()
+    pos_from = pos[0:3]
+    pos_at = pos[3:6]
+    vec_eye = vecadd(pos_at, vecscale(-1, pos_from))  # at - from
+
+    distnow = veclen(vec_eye)
+    new_eye = list(map(lambda x: dist/distnow*x, vec_eye))
+    pos[3:6] = vecadd(pos_from , new_eye)
+    NXSYS.SetGlobalCameraPos(pos)
+
+
 def _update_shake():
     global _shake_dhr
     global _shake_dvt
@@ -276,8 +385,9 @@ def _update_shake():
     _shake_dhr = triangular(-1*shake_factor, shake_factor)
     _shake_dvt = triangular(-1*shake_factor, shake_factor)
     if _shakemode[0]:
-        _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq), 1060101)
+        _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq), EVUID_TORUOSHAKE)
             
+
 def _save_toruo():
     """現在視点を保存。"""
     d = dict()
@@ -304,10 +414,12 @@ def _load_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
     except FileNotFoundError:
         pass
 
+
 def _save_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
     """撮る夫くん保存状況をファイルに書き出し"""
     with open(filename, 'w') as js:
         json.dump(_toruos, js, indent=4)
+
 
 def _getcarworldpos(trainid=None, carnum=None, car=None):
     """指定車両におけるglobalの_tracking_relativeにある相対座標をレイアウト上の絶対座標にして返す
@@ -326,6 +438,7 @@ def _getcarworldpos(trainid=None, carnum=None, car=None):
     rel = vectrans(yrot_matrix3d(car.GetRotateY()), rel)
     rel = vectrans(zrot_matrix3d(-1*car.GetRotateZ()), rel)
     return vecadd(car.GetPosition(), rel)
+
 
 def _tracktargetpos_fuzzy(trainid, carnum):
     """ファジィ号車番号で編成の相対座標を絶対座標に変換。
@@ -349,6 +462,7 @@ def _updateframetime(time_now):
     _systime = time_now # フレームの時刻を記録
     return ftime
 
+
 def _zoom(sgn, ftime):
     """ズーム
     Args:
@@ -359,6 +473,7 @@ def _zoom(sgn, ftime):
     _fov[0] = NXSYS.GetGlobalCameraFOV() + sgn * dFOV * ftime
     NXSYS.SetGlobalCameraFOV(_fov[0])
     _focus()
+
 
 def _rotate(campos, sgn, ftime):
     """水平方向見回し
@@ -375,6 +490,7 @@ def _rotate(campos, sgn, ftime):
     campos[3] = campos[0] + cos_*dx - sin_*dz
     campos[5] = campos[2] + sin_*dx + cos_*dz
 
+
 def _rotatevt(campos, sgn, ftime):
     """垂直見回し"""
     x = sqrt((campos[3]-campos[0])**2 + (campos[5]-campos[2])**2)
@@ -382,10 +498,11 @@ def _rotatevt(campos, sgn, ftime):
     alpha = tan(sgn * dRot * ftime)
     campos[4] = (y + x*alpha)/(1 - y/x*alpha) + campos[1] # tan加法定理の変形
 
+
 def _focus():
     """被写界深度を更新
     
-    グローバル変数 ``_depth``, ``_fnum``, ``_fov``, ``_delta``, ``_blur``を参照して
+    グローバル変数 `_depth`, `_fnum`, `_fov`, `_delta`, `_blur` を参照して
     ボケを演算し設定します。
     """
     global _blur
@@ -398,6 +515,7 @@ def _focus():
     d2 = _fnum[0] * tan(_fov[0]*pi/180.0)**2 / 100.0
     NXSYS.SetFocusParam(d1+_delta[0]*d2,d1-_delta[0]*d2,d1+_delta[1]*d2,d1-_delta[1]*d2, _blur[0])
 
+
 def _refresh_trainlist():
     """編成リストを更新
     
@@ -409,6 +527,7 @@ def _refresh_trainlist():
     _trainlist['obj'] = [t for t in _trainlist['obj'] if not t.GetDummyMode()]
     _trainlist['id'] = [t.GetID() for t in _trainlist['obj'] if not t.GetDummyMode()]
     _trainlist['name'] = [t.GetNAME() for t in _trainlist['obj'] if not t.GetDummyMode()]
+
 
 def _dispgui():
     """操作パネル"""
@@ -427,21 +546,26 @@ def _dispgui():
     global _fuzzytrack
     global _aemode
     global _aeparam
+    global _gcdist
+
     IMGUI.Begin("ToruoWin", "撮る夫くん")
+
     action = False
     action += IMGUI.SliderFloat("zoom", "FOV(ズーム角度)", _fov, 10.0, 135.0)
     action += IMGUI.SliderFloat("focus", "合焦中心", _depth, 0.1, 0.5)
-    #if not _aemode[0]:
-    action += IMGUI.SliderFloat("fnum", "絞り", _fnum, 2.0, 200.0)
+    action += IMGUI.SliderFloat("fnum", "絞り(F値)", _fnum, 2.0, 200.0)
     action += IMGUI.SliderFloat("blur", "ぼけの強さ", _blur, 0.0, 2.0)
     if action:
         _focus()
+    del action
+
     IMGUI.Separator()
     if IMGUI.Checkbox("program_ae", "プログラムAE", _aemode):
         _focus()
     IMGUI.SameLine()
     if IMGUI.Checkbox("shake", "手ブレモード", _shakemode):
         setshakemode(_shakemode[0])
+
     if IMGUI.TreeNode("childbtn",  "保存済み撮る夫くん"):
         if _toruos:
             for i,d in enumerate(_toruos):
@@ -449,7 +573,7 @@ def _dispgui():
                     jump_toruo(i)
                     # vrmapi.LOG('撮る夫くん {}'.format(i))
         else:
-            IMGUI.Text("撮る夫くんは保存されていません")
+            IMGUI.Text("撮る夫くんは保存されていません。")
         if IMGUI.Button("addtoruo", "現在視点を保存"):
             _save_toruo()
         IMGUI.SameLine()
@@ -484,8 +608,8 @@ def _dispgui():
                         _tracking_car = LAYOUT.GetTrain(_tracking_trainid[0]).GetCar(_tracking_carnum[0]-1)
                 IMGUI.Text("車体長: {0:.1f}mm".format(vecdistance(_tracking_car.GetLinkPosition(0), _tracking_car.GetLinkPosition(1))))
             IMGUI.SliderFloat("relx", "相対X", _tracking_relative['x'], -150.0, 150.0)
-            IMGUI.SliderFloat("rely", "相対Y", _tracking_relative['y'], -50.0, 50.0)
-            IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -50.0, 50.0)
+            IMGUI.SliderFloat("rely", "相対Y", _tracking_relative['y'], -150.0, 150.0)
+            IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -150.0, 150.0)
             IMGUI.TreePop()
         IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)
         IMGUI.Text(str(_tracking_car))
@@ -499,15 +623,34 @@ def _dispgui():
             LAYOUT.SKY().SetSunPos(_sunpos[0][0], _sunpos[1][0])
         IMGUI.TreePop()        
     if IMGUI.TreeNode("details", "詳細設定"):
+        IMGUI.Text("数値入力...")
+        action = False
+        action += IMGUI.InputFloat("directzoom", "FOV(ズーム角度)", _fov)
+        action += IMGUI.InputFloat("directfocus", "合焦中心", _depth)
+        action += IMGUI.InputFloat("directfnum", "絞り(F値)", _fnum)
+        action += IMGUI.InputFloat("directblur", "ぼけの強さ", _blur)
+        if action:
+            _focus()
+        del action
+        
+        IMGUI.Separator()
+
+        IMGUI.Text("グローバルカメラfrom-to距離設定")
+        IMGUI.InputFloat("gcdist", "設定値(mm)", _gcdist)
+        if IMGUI.Button("setgcdist", "再設定"):
+            set_gcdist(_gcdist[0])
+
         IMGUI.Text("AE詳細設定")
         IMGUI.SliderFloat('ae1', 'ぼけ限界FOV', _aeparam['blurfin'], 35.0,135.0)
         IMGUI.SliderFloat('ae2', 'F増加率', _aeparam['ftg'], 0.1,1.0)
         IMGUI.SliderFloat('ae3', 'FOV10でのF', _aeparam['f10'], 1.0, 50.0)
         IMGUI.TreePop()
+
     IMGUI.Separator()
+
     if IMGUI.Button("closer", "メニューを閉じる"):
         global _guidisp
-        _guidisp = 0
+        _guidisp = False
     if DEBUG:
         pos = NXSYS.GetGlobalCameraPos()
         pos_from = pos[:3]
@@ -517,8 +660,15 @@ def _dispgui():
         IMGUI.Text("Dist: {}".format(vecdistance(pos_from, pos_at)))
     IMGUI.End()
 
+
 def vecadd(vec1, vec2):
     return [a+b for a,b in zip(vec1, vec2)]
+
+
+def vecscale(k, vec):
+    """ベクトルvecをスカラーk倍"""
+    return list(map(lambda x: k*x, vec))
+
 
 def vecdistance(vec1, vec2):
     # ベクトル間の距離（ユークリッド距離）
@@ -527,12 +677,14 @@ def vecdistance(vec1, vec2):
         sq += (a-b)**2
     return sqrt(sq)
 
+
 def veclen(vec):
     # ベクトルの長さ
     sq = 0.0
     for a in vec:
         sq += a**2
     return sqrt(sq)
+
 
 def vecdot(vec1, vec2):
     # 内積（スカラー）を返す
@@ -541,6 +693,7 @@ def vecdot(vec1, vec2):
         p += i*j
     return p
 
+
 def vectrans(matrixA, vecx):
     # 線形変換 Ax
     vecy = []
@@ -548,28 +701,34 @@ def vectrans(matrixA, vecx):
         vecy.append(vecdot(matrixA[k], vecx))
     return vecy
 
+
 def turnmatrix(matrixA):
     # 行列の転置
     m = len(matrixA)
     n = len(matrixA[0])
     return [[matrixA[i][j] for i in range(m)] for j in range(n)]
 
+
 def matrixproduct(matrixA, matrixB):
     # 行列の積
     Bt = turnmatrix(matrixB)
     return [vectrans(Bt, ai) for ai in matrixA]
 
+
 def xrot_matrix3d(degree):
     theta = degree * pi / 180.0
     return [[1.0, 0.0, 0.0], [0.0, cos(theta), sin(theta)], [0.0, -1*sin(theta), cos(theta)]]
 
+
 def yrot_matrix3d(degree):
     theta = degree * pi / 180.0
     return [[cos(theta), 0.0, -1*sin(theta)], [0.0, 1.0, 0.0], [sin(theta), 0.0, cos(theta)]]
-    
+
+
 def zrot_matrix3d(degree):
     theta = degree * pi / 180.0
     return [[cos(theta), sin(theta), 0.0], [-1*sin(theta), cos(theta), 0.0], [0.0, 0.0, 1.0]]
+
 
 if __name__== "__main__":
     print('toruoはVRMNXシステムでのみ有効なモジュールです')
