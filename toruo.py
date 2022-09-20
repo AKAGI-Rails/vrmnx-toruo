@@ -1,4 +1,27 @@
 # -*- coding: utf-8 -*-
+
+# MIT License
+#
+# Copyright (c) 2021 AKAGI-Rails
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """撮る夫くん - VRMNX用グローバルカメラ拡張機能
 
 VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。
@@ -14,7 +37,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 
 Example:
     撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
-    `toruo.activate()` を記述します::
+    ``toruo.activate()`` を記述します::
     
         import vrmnx
         import toruo
@@ -24,7 +47,7 @@ Example:
             if ev == 'init':
                 pass
     
-# イベントのuserIDの予約領域
+イベントのuserIDの予約領域
 
 撮る夫くんでは，VRMNXのイベントuserIDで以下の領域を予約します。::
 
@@ -223,9 +246,9 @@ def activate(obj, ev, param):
 def jump_toruo(id=0):
     """保存済みの撮る夫くん座標にジャンプ
     
-    保存済みの撮る夫くんを``id``で呼び出し，その座標にジャンプします。
+    保存済みの撮る夫くんを ``id`` で呼び出し，その座標にジャンプします。
     
-    Arg:
+    Args:
         id (int): 撮る夫くんの保存番号
         
     Note:
@@ -269,18 +292,18 @@ def set_toruo(fov=None, depth=None, fnum=None, blur=None, aemode=None):
     
     この関数は，実行時に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。
 
-    たとえば，`init`イベントで実行すると初期状態の撮る夫くんの設定ができます。::
+    たとえば， initイベントで実行すると初期状態の撮る夫くんの設定ができます。 ::
 
         # LAYOUT
         import vrmapi
         import toruo
-        
+
         def vrmevent(obj,ev,param):
             toruo.activate(obj,ev,param)
             if ev == 'init':
                 toruo.set_toruo(depth=512**(-1/4), fnum=9.0)
 
-    カメラ座標は `vrmapi.SYSTEM().SetGlobalCameraPos()` によってください。
+    カメラ座標は ``vrmapi.SYSTEM().SetGlobalCameraPos()`` によってください。
         
     """
     global _fov
@@ -341,7 +364,7 @@ def set_gcdist(dist=256.0):
     現在の視線の向きをキープして，グローバルカメラのat座標を
     from座標からの指定距離に再設定する。
 
-    Parameter:
+    Parameters:
         dist: from-toの距離(mm)
     """
     pos = NXSYS.GetGlobalCameraPos()
@@ -479,7 +502,7 @@ def _rotatevt(campos, sgn, ftime):
 def _focus():
     """被写界深度を更新
     
-    グローバル変数 ``_depth``, ``_fnum``, ``_fov``, ``_delta``, ``_blur``を参照して
+    グローバル変数 `_depth`, `_fnum`, `_fov`, `_delta`, `_blur` を参照して
     ボケを演算し設定します。
     """
     global _blur
@@ -640,6 +663,7 @@ def _dispgui():
 
 def vecadd(vec1, vec2):
     return [a+b for a,b in zip(vec1, vec2)]
+
 
 def vecscale(k, vec):
     """ベクトルvecをスカラーk倍"""
