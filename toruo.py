@@ -71,19 +71,21 @@ from math import sin,cos,tan,sqrt, pi, pow, ceil,floor
 from random import triangular
 import json
 import os.path
+import datetime
 
 DEBUG = True
 
 LAYOUT = vrmapi.LAYOUT()
 NXSYS = vrmapi.SYSTEM()
 IMGUI = vrmapi.ImGui()
-DIRECTORY, BASE = os.path.split(NXSYS.GetLayoutPath())
-#LOG(BASE)
+DIRECTORY, TAIL = os.path.split(NXSYS.GetLayoutPath())
+#LOG(TAIL)
 
 # フレームイベントの設定は activate イベントハンドラでinitのタイミングに移動
 
 _PARENT = None  # 親オブジェクト
 #_gcam = []     # 地上カメラのリスト
+_config = None  # 撮る夫くん設定データ
 _toruos = []    # 撮る夫くんたちのリスト
 _childid = [0]
 _systime = 0.0  # 前フレームの時刻を記録
@@ -125,7 +127,7 @@ _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
 
-# Event UserID
+# Event UserID 1060000 - 1069999
 EVUID_TORUOFRAME = 1060000
 EVUID_TORUOSWITCH = 1060001
 EVUID_TORUOSHAKE = 1060101
@@ -401,24 +403,111 @@ def _save_toruo():
     _toruos.append(d)
     _save_config()
 
+def _default_config():
+    """空の設定ファイルを返す
+    
+    撮る夫くんconfig v.2.0
+    """
+    return {
+        'toruoconfig': 'toruoconfig',  # ファイル書式宣言。これがないjsonは相手にしない。
+        'version': '2.0',  # 書式バージョン宣言
+
+        'layouts': [
+            # list of dicts - レイアウトごとの情報を保存。順不同。
+            # {
+            #     'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
+            #     'timestamp': str(datetime.datetime.now()),
+            # 
+            #     # 'toruo'要素は旧バージョンと同等のリスト。
+            #     # 保存済み撮る夫くんのID-1がリストの番号になる。
+            #     'toruos': _toruos
+            # }
+        ]
+    }
+
+
+def _check_config(config):
+    """撮る夫くん設定ファイルのチェック
+    
+    正規データに対しては何もせずそのまま返す。
+    無効なデータは，空の正規データで返す。
+
+    撮る夫くんconfig - v.2.0
+    """
+    # マジックヘッダの確認
+    try:
+        magic = config['toruoconfig']
+    except (TypeError, KeyError):
+        LOG("Invalid toruo setting")
+        return _default_config()
+
+    if magic != 'toruoconfig':
+        LOG("[Toruo Warning] Invalid magicheader of toruo setting.")
+        return _default_config()
+
+    return config
+
 
 def _load_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
     """保存済み撮る夫くんを読み込み
+
+    撮る夫くんconfig - v.2.0
     
     レイアウトと同じディレクトリの toruo.json を探し，存在すればデータを読み込みます。
     """
+    global _config
     global _toruos
     try:
         with open(filename) as js:
-            _toruos = json.load(js)
+            config = json.load(js)
     except FileNotFoundError:
-        pass
+        LOG("[Toruo Warning] Could not found toruo setting.")
+        _config = _default_config()
+        return
 
+    config = _check_config(config)
+
+    # 自分のレイアウトファイルに相当するデータの引っ張り出し
+    for lay in config['layouts']:
+        if lay['filename'] == TAIL:
+            _toruos = lay['toruos']  # 見つかった。成功！
+            break
+    else:
+        # レイアウトファイルに対応するデータがなかった
+        LOG("[Toruo Warning] toruo data is not found.")
+    _config = config
+
+    
 
 def _save_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
-    """撮る夫くん保存状況をファイルに書き出し"""
+    """撮る夫くん保存状況をファイルに書き出し
+    
+    撮る夫くんconfig - v.2.0
+    """
+    global _config
+    config = _check_config(_config)
+
+    # 自分のレイアウトファイルに相当するデータの引っ張り出し
+    for lay in config['layouts']:
+        if lay['filename'] == TAIL:
+            lay['toruos'] = _toruos  # 見つかった。成功！
+            lay['timestamp'] = str(datetime.datetime.now())
+            break
+    else:
+        # レイアウトファイルに対応するデータがなかった -> 新規追加
+        config['layouts'].append(
+            {
+                'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
+                'timestamp': str(datetime.datetime.now()),
+
+                # 'toruo'要素は旧バージョンと同等のリスト。
+                # 保存済み撮る夫くんのID-1がリストの番号になる。
+                'toruos': _toruos
+            }
+        )
+    _config = config
     with open(filename, 'w') as js:
-        json.dump(_toruos, js, indent=4)
+        json.dump(config, js, indent=4)
 
 
 def _getcarworldpos(trainid=None, carnum=None, car=None):
