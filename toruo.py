@@ -58,7 +58,7 @@ Example:
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',]
-__version__ = '3.2.0'
+__version__ = '3.3.0'
 __author__ = "AKAGI"
 
 try:
@@ -442,7 +442,7 @@ def _check_config(config):
         return _default_config()
 
     if magic != 'toruoconfig':
-        LOG("[Toruo Warning] Invalid magicheader of toruo setting.")
+        LOG("[Toruo Warning] Invalid magicheader for toruo setting.")
         return _default_config()
 
     return config
