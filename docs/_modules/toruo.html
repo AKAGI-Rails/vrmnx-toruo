@@ -46,7 +46,7 @@
   
   
   
-    <title>toruo &#8212; 撮る夫くん 3.2.0 ドキュメント</title>
+    <title>toruo &#8212; 撮る夫くん 3.3.0 ドキュメント</title>
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/material.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -79,7 +79,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="撮る夫くん 3.2.0 ドキュメント"
+        <a href="../index.html" title="撮る夫くん 3.3.0 ドキュメント"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">videocam</i>
@@ -165,7 +165,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">撮る夫くん 3.2.0 ドキュメント</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">撮る夫くん 3.3.0 ドキュメント</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">モジュールコード</a></li>
       </ul>
     </div>
@@ -178,13 +178,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="撮る夫くん 3.2.0 ドキュメント" class="md-nav__button md-logo">
+    <a href="../index.html" title="撮る夫くん 3.3.0 ドキュメント" class="md-nav__button md-logo">
       
         <i class="md-icon">videocam</i>
       
     </a>
     <a href="../index.html"
-       title="撮る夫くん 3.2.0 ドキュメント">撮る夫くん</a>
+       title="撮る夫くん 3.3.0 ドキュメント">撮る夫くん</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/AKAGI-Rails/vrmnx-toruo" title="Go to repository" class="md-source" data-md-source="github">
@@ -234,6 +234,13 @@
     <li class="md-nav__item">
     
     
+      <a href="../saving.html" class="md-nav__link">視点保存機能</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="../history.html" class="md-nav__link">リリースノート</a>
       
     
@@ -260,7 +267,7 @@
     <li class="md-nav__item">
     
     
-      <a href="https://docs.python.org/ja/3.7/index.html" class="md-nav__link">Python 3.7</a>
+      <a href="https://docs.python.org/ja/3.10/index.html" class="md-nav__link">Python 3.10</a>
       
     
     </li>
@@ -351,7 +358,7 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DEBUG'</span><span class="p">,</span> <span class="s1">'dFOV'</span><span class="p">,</span> <span class="s1">'dRot'</span><span class="p">,</span> <span class="s1">'dMov'</span><span class="p">,</span> <span class="s1">'shake_factor'</span><span class="p">,</span> <span class="s1">'shake_freq'</span><span class="p">,</span>
            <span class="s1">'activate'</span><span class="p">,</span> <span class="s1">'set_toruo'</span><span class="p">,</span> <span class="s1">'jump_toruo'</span><span class="p">,</span> <span class="s1">'setfactor'</span><span class="p">,</span> <span class="s1">'setshakemode'</span><span class="p">,</span> <span class="s1">'set_gcdist'</span><span class="p">,]</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.2.0'</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.3.0'</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">"AKAGI"</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -364,19 +371,21 @@
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">triangular</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
 <span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="n">LAYOUT</span> <span class="o">=</span> <span class="n">vrmapi</span><span class="o">.</span><span class="n">LAYOUT</span><span class="p">()</span>
 <span class="n">NXSYS</span> <span class="o">=</span> <span class="n">vrmapi</span><span class="o">.</span><span class="n">SYSTEM</span><span class="p">()</span>
 <span class="n">IMGUI</span> <span class="o">=</span> <span class="n">vrmapi</span><span class="o">.</span><span class="n">ImGui</span><span class="p">()</span>
-<span class="n">DIRECTORY</span><span class="p">,</span> <span class="n">BASE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">NXSYS</span><span class="o">.</span><span class="n">GetLayoutPath</span><span class="p">())</span>
-<span class="c1">#LOG(BASE)</span>
+<span class="n">DIRECTORY</span><span class="p">,</span> <span class="n">TAIL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">NXSYS</span><span class="o">.</span><span class="n">GetLayoutPath</span><span class="p">())</span>
+<span class="c1">#LOG(TAIL)</span>
 
 <span class="c1"># フレームイベントの設定は activate イベントハンドラでinitのタイミングに移動</span>
 
 <span class="n">_PARENT</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># 親オブジェクト</span>
 <span class="c1">#_gcam = []     # 地上カメラのリスト</span>
+<span class="n">_config</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># 撮る夫くん設定データ</span>
 <span class="n">_toruos</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c1"># 撮る夫くんたちのリスト</span>
 <span class="n">_childid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">_systime</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># 前フレームの時刻を記録</span>
@@ -418,7 +427,7 @@
 <span class="n">_tracking_relative</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">],</span> <span class="s1">'y'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">],</span> <span class="s1">'z'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">]}</span>
 <span class="n">_tracking_af</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
 
-<span class="c1"># Event UserID</span>
+<span class="c1"># Event UserID 1060000 - 1069999</span>
 <span class="n">EVUID_TORUOFRAME</span> <span class="o">=</span> <span class="mi">1060000</span>
 <span class="n">EVUID_TORUOSWITCH</span> <span class="o">=</span> <span class="mi">1060001</span>
 <span class="n">EVUID_TORUOSHAKE</span> <span class="o">=</span> <span class="mi">1060101</span>
@@ -694,24 +703,111 @@
     <span class="n">_toruos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
     <span class="n">_save_config</span><span class="p">()</span>
 
+<span class="k">def</span> <span class="nf">_default_config</span><span class="p">():</span>
+    <span class="sd">"""空の設定ファイルを返す</span>
+<span class="sd">    </span>
+<span class="sd">    撮る夫くんconfig v.2.0</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">'toruoconfig'</span><span class="p">:</span> <span class="s1">'toruoconfig'</span><span class="p">,</span>  <span class="c1"># ファイル書式宣言。これがないjsonは相手にしない。</span>
+        <span class="s1">'version'</span><span class="p">:</span> <span class="s1">'2.0'</span><span class="p">,</span>  <span class="c1"># 書式バージョン宣言</span>
+
+        <span class="s1">'layouts'</span><span class="p">:</span> <span class="p">[</span>
+            <span class="c1"># list of dicts - レイアウトごとの情報を保存。順不同。</span>
+            <span class="c1"># {</span>
+            <span class="c1">#     'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。</span>
+            <span class="c1">#     'timestamp': str(datetime.datetime.now()),</span>
+            <span class="c1"># </span>
+            <span class="c1">#     # 'toruo'要素は旧バージョンと同等のリスト。</span>
+            <span class="c1">#     # 保存済み撮る夫くんのID-1がリストの番号になる。</span>
+            <span class="c1">#     'toruos': _toruos</span>
+            <span class="c1"># }</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_check_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">"""撮る夫くん設定ファイルのチェック</span>
+<span class="sd">    </span>
+<span class="sd">    正規データに対しては何もせずそのまま返す。</span>
+<span class="sd">    無効なデータは，空の正規データで返す。</span>
+
+<span class="sd">    撮る夫くんconfig - v.2.0</span>
+<span class="sd">    """</span>
+    <span class="c1"># マジックヘッダの確認</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">magic</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'toruoconfig'</span><span class="p">]</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+        <span class="n">LOG</span><span class="p">(</span><span class="s2">"Invalid toruo setting"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_default_config</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">magic</span> <span class="o">!=</span> <span class="s1">'toruoconfig'</span><span class="p">:</span>
+        <span class="n">LOG</span><span class="p">(</span><span class="s2">"[Toruo Warning] Invalid magicheader for toruo setting."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_default_config</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">config</span>
+
 
 <span class="k">def</span> <span class="nf">_load_config</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRECTORY</span><span class="p">,</span> <span class="s1">'toruo.json'</span><span class="p">)):</span>
     <span class="sd">"""保存済み撮る夫くんを読み込み</span>
+
+<span class="sd">    撮る夫くんconfig - v.2.0</span>
 <span class="sd">    </span>
 <span class="sd">    レイアウトと同じディレクトリの toruo.json を探し，存在すればデータを読み込みます。</span>
 <span class="sd">    """</span>
+    <span class="k">global</span> <span class="n">_config</span>
     <span class="k">global</span> <span class="n">_toruos</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">js</span><span class="p">:</span>
-            <span class="n">_toruos</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">js</span><span class="p">)</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">js</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-        <span class="k">pass</span>
+        <span class="n">LOG</span><span class="p">(</span><span class="s2">"[Toruo Warning] Could not found toruo setting."</span><span class="p">)</span>
+        <span class="n">_config</span> <span class="o">=</span> <span class="n">_default_config</span><span class="p">()</span>
+        <span class="k">return</span>
 
+    <span class="n">config</span> <span class="o">=</span> <span class="n">_check_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="c1"># 自分のレイアウトファイルに相当するデータの引っ張り出し</span>
+    <span class="k">for</span> <span class="n">lay</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">'layouts'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">lay</span><span class="p">[</span><span class="s1">'filename'</span><span class="p">]</span> <span class="o">==</span> <span class="n">TAIL</span><span class="p">:</span>
+            <span class="n">_toruos</span> <span class="o">=</span> <span class="n">lay</span><span class="p">[</span><span class="s1">'toruos'</span><span class="p">]</span>  <span class="c1"># 見つかった。成功！</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># レイアウトファイルに対応するデータがなかった</span>
+        <span class="n">LOG</span><span class="p">(</span><span class="s2">"[Toruo Warning] toruo data is not found."</span><span class="p">)</span>
+    <span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+
+    
 
 <span class="k">def</span> <span class="nf">_save_config</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRECTORY</span><span class="p">,</span> <span class="s1">'toruo.json'</span><span class="p">)):</span>
-    <span class="sd">"""撮る夫くん保存状況をファイルに書き出し"""</span>
+    <span class="sd">"""撮る夫くん保存状況をファイルに書き出し</span>
+<span class="sd">    </span>
+<span class="sd">    撮る夫くんconfig - v.2.0</span>
+<span class="sd">    """</span>
+    <span class="k">global</span> <span class="n">_config</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">_check_config</span><span class="p">(</span><span class="n">_config</span><span class="p">)</span>
+
+    <span class="c1"># 自分のレイアウトファイルに相当するデータの引っ張り出し</span>
+    <span class="k">for</span> <span class="n">lay</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s1">'layouts'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">lay</span><span class="p">[</span><span class="s1">'filename'</span><span class="p">]</span> <span class="o">==</span> <span class="n">TAIL</span><span class="p">:</span>
+            <span class="n">lay</span><span class="p">[</span><span class="s1">'toruos'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_toruos</span>  <span class="c1"># 見つかった。成功！</span>
+            <span class="n">lay</span><span class="p">[</span><span class="s1">'timestamp'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># レイアウトファイルに対応するデータがなかった -&gt; 新規追加</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">'layouts'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s1">'filename'</span><span class="p">:</span> <span class="n">TAIL</span><span class="p">,</span>  <span class="c1"># ビュワーが開いているファイルとこの値で一致判定する。</span>
+                <span class="s1">'timestamp'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()),</span>
+
+                <span class="c1"># 'toruo'要素は旧バージョンと同等のリスト。</span>
+                <span class="c1"># 保存済み撮る夫くんのID-1がリストの番号になる。</span>
+                <span class="s1">'toruos'</span><span class="p">:</span> <span class="n">_toruos</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">js</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_toruos</span><span class="p">,</span> <span class="n">js</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">js</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_getcarworldpos</span><span class="p">(</span><span class="n">trainid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">carnum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">car</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
