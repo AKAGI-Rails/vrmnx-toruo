@@ -1,6 +1,8 @@
 # 撮る夫くん　クイックスタート
 
-## ダウンロード
+## ダウンロードとインストール
+
+### 1. ソースファイルをダウンロードする方法
 
 撮る夫くんのモジュールは以下のリンクからダウンロードできます。
 右クリックして「名前をつけてリンク先を保存」してください。
@@ -14,7 +16,27 @@ _toruo.py_ は，VRMNXが`import`可能な場所に保存する必要があり�
     ├─ toruo.py
     └─ YourLayout.vrmnx
 
-## 撮る夫くんを有効にする
+### 2. pipを使う方法
+
+撮る夫くんのGitリポジトリにsetupスクリプトを設置しました。Gitリポジトリからpipで撮る夫くんをインストールすることが可能です。
+
+この場合、インストール先にはVRMNXビュワー実行時のモジュール検索パスのいずれかを指定する必要があります。
+site-packagesを指定しておくことで、**レイアウトファイルの保存ディレクトリごとにtoruo.pyをコピーする必要がなくなります。**
+
+pipで、撮る夫くんをGitHubからインストールするコマンドは以下のようになります。（通常のインストール先の場合。）
+スタートメニューからコマンドプロンプトを立ち上げ、コマンドを入力して実行してください。
+
+VRM NXの方：
+
+    "%programfiles%\i.magic\鉄道模型シミュレーターNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git -t "%programfiles%\i.magic\鉄道模型シミュレーターNX\python\Lib\site-packages"
+
+VRM Online NXの方：
+
+    "%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git -t "%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\Lib\site-packages"
+
+アップデート、アンインストールの際は、`install`コマンドのかわりに、`update` または `uninstall`コマンドを使ってください。
+
+## レイアウトで撮る夫くんを有効にする
 
 撮る夫くんを有効にするには，レイアウトスクリプトに2行書き加えます。
 

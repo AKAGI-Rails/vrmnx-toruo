@@ -15,6 +15,7 @@
 
    クイックスタート <quickstart>
    リファレンス <toruo>
+   視点保存機能 <saving>
    history
    VRM Terminal Downloads <http://akagivrm.sokushinbutsu.com/download/>
 
@@ -50,4 +51,4 @@ Ver. 3.2.0. (2022-09-20)
    :caption: 外部リンク
 
    VRMNX Scriptマニュアル<https://vrmcloud.net/nx/script/>
-   Python 3.7 <https://docs.python.org/ja/3.7/index.html>
+   Python 3.10 <https://docs.python.org/ja/3.10/index.html>
