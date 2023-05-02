@@ -15,6 +15,7 @@
 
    クイックスタート <quickstart>
    リファレンス <toruo>
+   視点保存機能 <saving>
    history
    VRM Terminal Downloads <http://akagivrm.sokushinbutsu.com/download/>
 
