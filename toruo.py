@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright (c) 2021 AKAGI-Rails
+# Copyright (c) 2021-2025 AKAGI-Rails
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 - 手ブレ風エフェクト
 - 車両追尾
 - 視点保存
+- ゲームパッドでの操作
 
 Example:
     撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
@@ -57,8 +58,9 @@ Example:
 """
 
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
-           'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',]
-__version__ = '3.3.0'
+           'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',
+           'screenshot']
+__version__ = '3.4.0'
 __author__ = "AKAGI"
 
 try:
@@ -67,11 +69,18 @@ try:
 except ModuleNotFoundError:
     print('VRMAPIが見つかりません。VRMNXシステムでしか動作しません。')
     raise
+
 from math import sin,cos,tan,sqrt, pi, pow, ceil,floor
 from random import triangular
 import json
 import os.path
+import ctypes
 import datetime
+from itertools import chain
+
+from mss.windows import MSS as msswin
+import mss.tools
+import pygetwindow as gw
 
 DEBUG = True
 
@@ -97,7 +106,8 @@ _shake_dvt = 0.0     # 手ブレの差分
 _shake_dhr = 0.0
 _shake_evid = None
 _aemode = [False]    # プログラムオート
-_aeparam = {'blurfin':[90.0], 'ftg':[5.0/12], 'f10':[25.0]}
+DEFAULT_AEPARAM = {'blurfin':[90.0], 'ftg':[5.0/12], 'f10':[25.0]}
+_aeparam = DEFAULT_AEPARAM
 _sunpos = [[0], [45]] # 太陽位置(緯度,経度)
 _gcdist = [256.0]    # グローバルカメラのfrom-to距離設定値（リアルタイムではない）
 
@@ -127,10 +137,39 @@ _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
 
+# ゲームパッドFLG
+_GPlist = [False, False, False, False]  #: 接続されているとTrue 
+_gamepad_sw = [-1]  #: -1で無効、0-3で撮る夫くんで使用するゲームパッドのデバイス番号
+DEFAULT_GAMEPAD_PARAM = {'L0_sense':[1.0], 'L0_exp':[1.0], 'R0_sense':[1.0], 'R0_exp':[1.0], 'R0_Yinv':[False], 'v_sense':[1.0], 'zoom_sense':[1.0]}
+_gamepad_param = DEFAULT_GAMEPAD_PARAM
+_gamepad_RYsgn = 1
+_dash_factor = 1.0  #: ダッシュ係数（1.0～2.0）
+DASH_MAX = 3.0
+DASH_DIFF = 8.0
+
+ANALOG_MAX = 32768.0
+
+GP_BUTTONS = [1,2,4,8, 0x10, 0x20, 0x100, 0x200, 0x1000, 0x2000, 0x4000, 0x8000]
+
 # Event UserID 1060000 - 1069999
 EVUID_TORUOFRAME = 1060000
 EVUID_TORUOSWITCH = 1060001
 EVUID_TORUOSHAKE = 1060101
+
+
+# マイピクチャを取得（スクリーンショットの保存先）
+_buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
+if ctypes.windll.shell32.SHGetSpecialFolderPathW(None, _buf, 0x0027, False):
+    MYPICTURES = _buf.value
+else:
+    vrmapi.LOG('[toruo] Failed to get Pictures folder path.')
+    MYPICTURES = os.getcwd()
+del _buf
+
+SSSAVEDIR = os.path.join(MYPICTURES, "screenshot")
+os.makedirs(SSSAVEDIR, exist_ok=True)
+
+APPNAMES = ('鉄道模型シミュレーターNX', 'VRMONLINE-NX')
 
 def activate(obj, ev, param):
     """撮る夫くんを有効にするコマンド。
@@ -159,20 +198,25 @@ def activate(obj, ev, param):
         _PARENT = obj
         obj.SetEventFrame(EVUID_TORUOFRAME)
         obj.SetEventKeyDown('P', EVUID_TORUOSWITCH)
+        refresh_GPlist()
         _load_config()
         _refresh_trainlist()
         vrmapi.LOG('撮る夫くん(Ver.{}) stand by. {}'.format(__version__, DIRECTORY))
+        #print(MYPICTURES)
         return
+
     elif param['eventid'] == _shake_evid:
         # (Afterイベント)
         _update_shake()
         return
+    
     elif ev == 'keydown':
         if param['keycode'] == 'P':
             # GUI表示のON/OFFを切替
+            # このイベントは他モジュールのイベントとの相互乗り入れのため、IDで区別しない
             global _guidisp
             _guidisp = not _guidisp
-        return
+            return
 
     #if not (ev == 'frame' and param['eventUID'] == EVUID_TORUOFRAME):
     if ev != 'frame':
@@ -186,10 +230,13 @@ def activate(obj, ev, param):
     ftime = _updateframetime(param['eventtime'])
     campos = NXSYS.GetGlobalCameraPos()
 
-    # キー操作の処理
     global _shake_hr
     global _shake_vt
+    global _dash_factor
+    global _depth
 
+    """
+    # キー操作の処理
     # ズームイン
     stat = NXSYS.GetKeyStat('E') + NXSYS.GetKeyStat('W') + NXSYS.GetKeyStat('R') + 3.0
     if stat > 0.0:
@@ -209,6 +256,67 @@ def activate(obj, ev, param):
     stat = NXSYS.GetKeyStat('R') + NXSYS.GetKeyStat('F') + 2.0
     if stat > 0.0:
         _rotate(campos, 1, ftime)
+    """
+    # ゲームパッド操作
+    if _gamepad_sw[0] in [0,1,2,3]:
+        gp = _gamepad_sw[0]
+
+        # スクリーンショット(mss)
+        if NXSYS.GetGamepadB(gp):
+            screenshot()
+
+        # ダッシュ処理
+        if NXSYS.GetGamepadA(gp):
+            _dash_factor += DASH_DIFF * ftime
+        else:
+            _dash_factor -= DASH_DIFF * ftime
+        _dash_factor = clip(_dash_factor, 1.0, DASH_MAX)
+
+        # 並進移動
+        # 左スティック・水平面
+        LX = NXSYS.GetGamepadAnalogStickLX(gp)
+        LY = NXSYS.GetGamepadAnalogStickLY(gp)
+        # 上下移動
+        v = 0
+        if NXSYS.GetGamepadRB(gp):
+            v += +1 * _gamepad_param['v_sense'][0]
+        if NXSYS.GetGamepadLB(gp):
+            v += -1 * _gamepad_param['v_sense'][0]
+        if abs(LX) > 100 or abs(LY) > 100 or v != 0:
+            _move(campos, adjust_analogL(LX)*_dash_factor, v*_dash_factor, adjust_analogL(LY)*_dash_factor, ftime)
+        else:
+            if not NXSYS.GetGamepadA(gp):
+                _dash_factor = 1.0
+
+        # 見回し（ゲームパッド）
+        RX = NXSYS.GetGamepadAnalogStickRX(gp)
+        if abs(RX) > 100:
+            _rotate(campos, adjust_analogR(RX), ftime)
+
+        RY = NXSYS.GetGamepadAnalogStickRY(gp)
+        if abs(RY) > 100:
+            _rotatevt(campos, adjust_analogR(RY)*_gamepad_RYsgn, ftime)
+
+        # ズームイン・ズームアウト（ゲームパッド）
+        stat = NXSYS.GetGamepadLEFT(gp)
+        if stat:
+            _zoom(1*_gamepad_param['zoom_sense'][0], ftime)
+        
+        stat = NXSYS.GetGamepadRIGHT(gp)
+        if stat:
+            _zoom(-1*_gamepad_param['zoom_sense'][0], ftime)
+
+        # フォーカス（深度値）中心
+        if NXSYS.GetGamepadUP(gp):
+            # フォーカス遠方へ＝深度値小さく
+            d = _depth[0] - 0.05*ftime
+            _depth[0] = clip(d, 0.1, 0.5)
+            _focus()
+        if NXSYS.GetGamepadDOWN(gp):
+            # フォーカス近くへ＝深度値大きく
+            d = _depth[0] + 0.05*ftime
+            _depth[0] = clip(d, 0.1, 0.5)
+            _focus()
 
     # 追尾処理
     istracking = False  # 初期化
@@ -224,7 +332,6 @@ def activate(obj, ev, param):
             istracking = True
             campos[3:6] = tgtpos
             if _tracking_af[0]:
-                global _depth
                 #global _blur
                 # Auto Focus (Program Exposure)
                 _depth[0] = pow(dist, -0.25)
@@ -388,7 +495,16 @@ def _update_shake():
     _shake_dvt = triangular(-1*shake_factor, shake_factor)
     if _shakemode[0]:
         _shake_evid = _PARENT.SetEventAfter(triangular(0.0, 1.0/shake_freq), EVUID_TORUOSHAKE)
-            
+
+
+def refresh_GPlist():
+    """接続されているゲームパッドのリストを更新"""
+    global _GPlist
+    gplist = [NXSYS.IsGamepadConnected(i) for i in range(4)]
+    _GPlist = gplist
+    vrmapi.LOG("[toruo] Gamepad connection refreshed.")
+    return gplist
+
 
 def _save_toruo():
     """現在視点を保存。"""
@@ -403,26 +519,34 @@ def _save_toruo():
     _toruos.append(d)
     _save_config()
 
+
 def _default_config():
     """空の設定ファイルを返す
     
-    撮る夫くんconfig v.2.0
+    撮る夫くんconfig v.3.0
     """
     return {
         'toruoconfig': 'toruoconfig',  # ファイル書式宣言。これがないjsonは相手にしない。
-        'version': '2.0',  # 書式バージョン宣言
+        'version': '3.0',  # 書式バージョン宣言
 
-        'layouts': [
-            # list of dicts - レイアウトごとの情報を保存。順不同。
-            # {
+        'layouts': {
+            # dict of dict - レイアウトごとの情報を保存。順不同。
+            # key: レイアウトのファイルパスのTAIL (ファイル名)
+            # value: 設定内容(dict)
+
+            # TAIL: {
             #     'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
             #     'timestamp': str(datetime.datetime.now()),
             # 
             #     # 'toruo'要素は旧バージョンと同等のリスト。
             #     # 保存済み撮る夫くんのID-1がリストの番号になる。
             #     'toruos': _toruos
+            #     
+            #     'gamepad': (int) #: ゲームパッドスイッチの状態（撮る夫くんでアクティブなデバイス番号。-1はOFF）
+            #     'gamepad_param': {'L0_sense':[1.0], 'L0_exp':[1.0], 'R0_sense':[1.0], 'R0_exp':[1.0], 'v_sense':[1.0]} by default
+            #     'aeparam': (dict) AEパラメータ
             # }
-        ]
+        }
     }
 
 
@@ -432,17 +556,23 @@ def _check_config(config):
     正規データに対しては何もせずそのまま返す。
     無効なデータは，空の正規データで返す。
 
-    撮る夫くんconfig - v.2.0
+    撮る夫くんconfig - v.3.0
     """
     # マジックヘッダの確認
     try:
         magic = config['toruoconfig']
-    except (TypeError, KeyError):
+    except (TypeError, KeyError) as e:
         LOG("Invalid toruo setting")
+        print("Following error is muted;", e)
         return _default_config()
 
     if magic != 'toruoconfig':
         LOG("[Toruo Warning] Invalid magicheader for toruo setting.")
+        return _default_config()
+    
+    # バージョンのチェック (New in toruo v.3.4)
+    v = config.get('version')
+    if int(v[0]) < 3:
         return _default_config()
 
     return config
@@ -451,12 +581,15 @@ def _check_config(config):
 def _load_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
     """保存済み撮る夫くんを読み込み
 
-    撮る夫くんconfig - v.2.0
+    撮る夫くんconfig - v.3.0
     
     レイアウトと同じディレクトリの toruo.json を探し，存在すればデータを読み込みます。
     """
     global _config
     global _toruos
+    global _gamepad_sw
+    global _gamepad_param
+    global _aeparam
     try:
         with open(filename) as js:
             config = json.load(js)
@@ -466,48 +599,72 @@ def _load_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
         return
 
     config = _check_config(config)
-
-    # 自分のレイアウトファイルに相当するデータの引っ張り出し
-    for lay in config['layouts']:
-        if lay['filename'] == TAIL:
-            _toruos = lay['toruos']  # 見つかった。成功！
-            break
-    else:
-        # レイアウトファイルに対応するデータがなかった
-        LOG("[Toruo Warning] toruo data is not found.")
     _config = config
 
-    
+    # 自分のレイアウトファイルに相当するデータの引っ張り出し
+    lay = config['layouts'].get(TAIL, None)
+    if lay is None:
+        # 自分のレイアウトのセーブデータがない
+        LOG("[Toruo Warning] toruo data is not found.")
+    else:
+        # セーブデータが見つかった
+        _toruos = lay.get('toruos', [])  # 撮る夫くんのリストをロード
+
+        # ゲームパッド感度設定をロードして復活
+        _gamepad_param = lay.get('gamepad_param', {})
+        for k,v in DEFAULT_GAMEPAD_PARAM.items():
+            _gamepad_param.setdefault(k,v)
+        global _gamepad_RYsgn
+        if _gamepad_param['R0_Yinv'][0]:
+            _gamepad_RYsgn = -1
+        else:
+            _gamepad_RYsgn = 1
+
+        # プログラムAE
+        _aeparam = lay.get('aeparam', {})
+        for k,v in DEFAULT_AEPARAM.items():
+            _aeparam.setdefault(k,v)
+        
+        # ゲームパッドの設定をロードして復活
+        gp = lay.get('gamepad', -1)
+        if gp in [0,1,2,3]:
+            if NXSYS.IsGamepadConnected(gp):
+                # ゲームパッドの接続あり
+                _gamepad_sw = [gp]
+            else:
+                _gamepad_sw = [-1]
+        else:
+            _gamepad_sw = [-1]
+        _change_gamepad()  # これは最後に（saveが呼ばれちゃうので）
+
 
 def _save_config(filename=os.path.join(DIRECTORY, 'toruo.json')):
     """撮る夫くん保存状況をファイルに書き出し
     
-    撮る夫くんconfig - v.2.0
+    撮る夫くんconfig - v.3.0
     """
     global _config
     config = _check_config(_config)
 
-    # 自分のレイアウトファイルに相当するデータの引っ張り出し
-    for lay in config['layouts']:
-        if lay['filename'] == TAIL:
-            lay['toruos'] = _toruos  # 見つかった。成功！
-            lay['timestamp'] = str(datetime.datetime.now())
-            break
-    else:
-        # レイアウトファイルに対応するデータがなかった -> 新規追加
-        config['layouts'].append(
-            {
-                'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
-                'timestamp': str(datetime.datetime.now()),
+    config['layouts'][TAIL] = {
+            'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
+            'timestamp': str(datetime.datetime.now()),
 
-                # 'toruo'要素は旧バージョンと同等のリスト。
-                # 保存済み撮る夫くんのID-1がリストの番号になる。
-                'toruos': _toruos
-            }
-        )
-    _config = config
+            # 'toruo'要素は旧バージョンと同等のリスト。
+            # 保存済み撮る夫くんのID-1がリストの番号になる。
+            'toruos': _toruos,
+
+            # ゲームパッドスイッチの状態。（撮る夫くんでアクティブなデバイス番号。-1はOFF）
+            'gamepad': _gamepad_sw[0],
+            'gamepad_param': _gamepad_param,
+
+            'aeparam': _aeparam
+        }
+    _config = config  # グローバルに書き戻す
     with open(filename, 'w') as js:
         json.dump(config, js, indent=4)
+    vrmapi.LOG("toruo config saved.")
+    return
 
 
 def _getcarworldpos(trainid=None, carnum=None, car=None):
@@ -552,41 +709,106 @@ def _updateframetime(time_now):
     return ftime
 
 
-def _zoom(sgn, ftime):
+def _zoom(spd, ftime):
     """ズーム
     Args:
-        sgn: -1でズームイン，+1でズームアウト
+        spd: -1でズームイン，+1でズームアウト
         ftime: フレーム描画時間
     """
     global _fov
-    _fov[0] = NXSYS.GetGlobalCameraFOV() + sgn * dFOV * ftime
+    f = NXSYS.GetGlobalCameraFOV() + spd * dFOV * ftime
+    f = clip(f, 10.0, 135.0)
+    _fov[0] = f
     NXSYS.SetGlobalCameraFOV(_fov[0])
     _focus()
 
 
-def _rotate(campos, sgn, ftime):
-    """水平方向見回し
+def _move(campos, x, y, z, ftime):
+    """平行移動
+
+    リストで与えられる `campos` をインプレースに操作します。
+    帰り値はありません。
     
     Args:
-        sgn: -1で左，+1で右回り
+        campos: NXSYS.GetGlobalCameraPos()の帰り値と同型
+        xyz: 入力移動量。camposと同じ次元。
+        ftime: フレームの描画時間
+
+    入力移動量のXZは向いてる方角に回転して現在座標に加算する。
+
+    Note:
+        VRM Layoutのワールド座標XZとスティック入力のXYで回転方向が違うので注意。
+    """
+    # 0 1 2 3 4 5
+    # x y z x y z
+    # XZ方向を回転
+    rx = campos[3] - campos[0]
+    rz = campos[5] - campos[2]
+    vr = [rx, rz]
+    vl = veclen(vr)
+    cos_, sin_ = vecscale(1/vl/100, vr)  # [cos, sin]
+
+    rot = [[-sin_, 0, cos_],
+           [0, 100, 0],
+           [cos_, 0, sin_]]
+    vm = vectrans(rot, [x,y,z])  # 回転済みの入力方向
+    vm = vecscale(ftime, vm)
+    campos[0] += vm[0]
+    campos[1] += vm[1]
+    campos[2] += vm[2]
+    campos[3] += vm[0]
+    campos[4] += vm[1]
+    campos[5] += vm[2]
+
+
+def adjust_analogL(x):
+    sgnx = sgn(x)
+    absx = abs(x)
+    y = sgnx * ((absx/ANALOG_MAX)**_gamepad_param['L0_exp'][0]) * _gamepad_param['L0_sense'][0] * ANALOG_MAX
+    return y
+
+def _rotate(campos, spd, ftime):
+    """水平方向見回し
+
+    リストで与えられる `campos` をインプレースに操作します。
+    帰り値はありません。
+    
+    Args:
+        campos: NXSYS.GetGlobalCameraPos()の帰り値と同型
+        spd: -1で左，+1で右回り
+        ftime: フレームの描画時間
     """
     # list campos はMutableなので返り値を取らなくていい
     dx = campos[3] - campos[0]
     dz = campos[5] - campos[2]
-    dtheta = sgn * dRot * ftime
+    dtheta = spd * dRot * ftime
     cos_ = cos(dtheta)
     sin_ = sin(dtheta)
     campos[3] = campos[0] + cos_*dx - sin_*dz
     campos[5] = campos[2] + sin_*dx + cos_*dz
 
 
-def _rotatevt(campos, sgn, ftime):
-    """垂直見回し"""
+def _rotatevt(campos, spd, ftime):
+    """垂直見回し
+
+    リストで与えられる `campos` をインプレースに操作します。
+    帰り値はありません。
+    
+    Args:
+        campos: NXSYS.GetGlobalCameraPos()の帰り値と同型
+        spd: -1で下，+1で上
+        ftime: フレームの描画時間
+    """
     x = sqrt((campos[3]-campos[0])**2 + (campos[5]-campos[2])**2)
     y = campos[4]-campos[1]
-    alpha = tan(sgn * dRot * ftime)
+    alpha = tan(spd * dRot * ftime)
     campos[4] = (y + x*alpha)/(1 - y/x*alpha) + campos[1] # tan加法定理の変形
 
+def adjust_analogR(x):
+    sgnx = sgn(x)
+    absx = abs(x)
+    y = sgnx * ((absx/ANALOG_MAX)**_gamepad_param['R0_exp'][0]) * _gamepad_param['R0_sense'][0] 
+    return y
 
 def _focus():
     """被写界深度を更新
@@ -636,6 +858,7 @@ def _dispgui():
     global _aemode
     global _aeparam
     global _gcdist
+    global _gamepad_sw
 
     IMGUI.Begin("ToruoWin", "撮る夫くん")
 
@@ -688,18 +911,18 @@ def _dispgui():
                     vrmapi.LOG("[撮る夫くん]追尾対象変更 {}".format(_trainlist['name'][i]))
             if IMGUI.Checkbox("trackfuzzy", "ファジィ追尾", _fuzzytrack):
                 _tracking_carnum[0] = int(round(_tracking_carnum[0]))
-            if _tracking_trainid[0]:
-                if _fuzzytrack[0]:
-                    if IMGUI.SliderFloat('carnofuzzy', "ファジィ号車番号", _tracking_carnum, 1.0, _tracking_trnlen):
-                        _tracking_car = LAYOUT.GetTrain(_tracking_trainid[0]).GetCar(int(round(_tracking_carnum[0]))-1)
-                else:
-                    if IMGUI.SliderInt("carno", "号車番号", _tracking_carnum, 1, _tracking_trnlen):
-                        _tracking_car = LAYOUT.GetTrain(_tracking_trainid[0]).GetCar(_tracking_carnum[0]-1)
-                IMGUI.Text("車体長: {0:.1f}mm".format(vecdistance(_tracking_car.GetLinkPosition(0), _tracking_car.GetLinkPosition(1))))
-            IMGUI.SliderFloat("relx", "相対X", _tracking_relative['x'], -150.0, 150.0)
-            IMGUI.SliderFloat("rely", "相対Y", _tracking_relative['y'], -150.0, 150.0)
-            IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -150.0, 150.0)
             IMGUI.TreePop()
+        if _tracking_trainid[0]:
+            if _fuzzytrack[0]:
+                if IMGUI.SliderFloat('carnofuzzy', "ファジィ号車番号", _tracking_carnum, 1.0, _tracking_trnlen):
+                    _tracking_car = LAYOUT.GetTrain(_tracking_trainid[0]).GetCar(int(round(_tracking_carnum[0]))-1)
+            else:
+                if IMGUI.SliderInt("carno", "号車番号", _tracking_carnum, 1, _tracking_trnlen):
+                    _tracking_car = LAYOUT.GetTrain(_tracking_trainid[0]).GetCar(_tracking_carnum[0]-1)
+            IMGUI.Text("車体長: {0:.1f}mm".format(vecdistance(_tracking_car.GetLinkPosition(0), _tracking_car.GetLinkPosition(1))))
+        IMGUI.SliderFloat("relx", "相対X", _tracking_relative['x'], -150.0, 150.0)
+        IMGUI.SliderFloat("rely", "相対Y", _tracking_relative['y'], -150.0, 150.0)
+        IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -150.0, 150.0)
         IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)
         IMGUI.Text(str(_tracking_car))
         IMGUI.TreePop()
@@ -712,6 +935,34 @@ def _dispgui():
             LAYOUT.SKY().SetSunPos(_sunpos[0][0], _sunpos[1][0])
         IMGUI.TreePop()        
     if IMGUI.TreeNode("details", "詳細設定"):
+        IMGUI.Text("ゲームパッド感度調整")
+        if IMGUI.InputFloat("L0Sense", "左スティック・倍率", _gamepad_param['L0_sense']):
+            _gamepad_param['L0_sense'][0] = clip(_gamepad_param['L0_sense'][0], -1000.0, 1000.0)
+            _save_config()
+        if IMGUI.InputFloat("L0exp", "左スティック・低速", _gamepad_param['L0_exp']):
+            _gamepad_param['L0_exp'][0] = clip(_gamepad_param['L0_exp'][0], 0.0001, 1000.0)
+            _save_config()
+        if IMGUI.InputFloat("R0Sense", "右スティック・倍率", _gamepad_param['R0_sense']):
+            _gamepad_param['R0_sense'][0] = clip(_gamepad_param['R0_sense'][0], -1000.0, 1000.0)
+            _save_config()
+        if IMGUI.InputFloat("R0exp", "右スティック・低速", _gamepad_param['R0_exp']):
+            _gamepad_param['R0_exp'][0] = clip(_gamepad_param['R0_exp'][0], 0.0001, 1000)
+            _save_config()
+        if IMGUI.Checkbox('RYinv', "右スティック・上下反転", _gamepad_param['R0_Yinv']):
+            global _gamepad_RYsgn
+            if _gamepad_param['R0_Yinv'][0]:
+                _gamepad_RYsgn = -1
+            else:
+                _gamepad_RYsgn = 1
+        if IMGUI.InputFloat("vsense", "上下移動", _gamepad_param['v_sense']):
+            _gamepad_param['v_sense'][0] = clip(_gamepad_param['v_sense'][0], -1000.0, 1000.0)
+            _save_config()
+        if IMGUI.InputFloat("zoomsense", "ズーム", _gamepad_param['zoom_sense']):
+            _gamepad_param['zoom_sense'][0] = clip(_gamepad_param['zoom_sense'][0], -1000.0, 1000.0)
+            _save_config()
+
+        IMGUI.Separator()
+
         IMGUI.Text("数値入力...")
         action = False
         action += IMGUI.InputFloat("directzoom", "FOV(ズーム角度)", _fov)
@@ -729,11 +980,35 @@ def _dispgui():
         if IMGUI.Button("setgcdist", "再設定"):
             set_gcdist(_gcdist[0])
 
+        IMGUI.Separator()
+
         IMGUI.Text("AE詳細設定")
-        IMGUI.SliderFloat('ae1', 'ぼけ限界FOV', _aeparam['blurfin'], 35.0,135.0)
+        IMGUI.SliderFloat('ae1', 'ぼけ限界FOV', _aeparam['blurfin'], 20.0,135.0)
         IMGUI.SliderFloat('ae2', 'F増加率', _aeparam['ftg'], 0.1,1.0)
         IMGUI.SliderFloat('ae3', 'FOV10でのF', _aeparam['f10'], 1.0, 50.0)
+
+        IMGUI.Separator()
+
+        if IMGUI.Button('save_details', "詳細設定を保存"):
+            _save_config()
+
         IMGUI.TreePop()
+
+    IMGUI.Separator()
+
+    IMGUI.Text("ゲームパッドで撮る夫くん操作")
+
+    if IMGUI.RadioButton("GPnull", "ゲームパッドOFF", _gamepad_sw, -1):
+        _change_gamepad()
+        # LAYOUT.DispTickerMSG("[撮る夫くん]ゲームパッド OFF")
+
+    #for i in range(4):
+    #    if NXSYS.IsGamepadConnected(i):
+    for i, con in enumerate(_GPlist):
+        if con:
+            if IMGUI.RadioButton(f'GP{i}', f"ゲームパッド{i}", _gamepad_sw, i):
+                _change_gamepad()
+                # LAYOUT.DispTickerMSG(f"[撮る夫くん]ゲームパッド = {i}")
 
     IMGUI.Separator()
 
@@ -747,7 +1022,52 @@ def _dispgui():
         IMGUI.Text("From: {}".format(pos_from))
         IMGUI.Text("At  : {}".format(pos_at))
         IMGUI.Text("Dist: {}".format(vecdistance(pos_from, pos_at)))
+        IMGUI.Text("L   : {}, {}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
+        IMGUI.Text("Dash: {}".format(_dash_factor))
     IMGUI.End()
+
+
+def _change_gamepad():
+    """ゲームパッドのアクティブ状態を更新。
+    
+    グローバル変数 `_gamepad_sw` の状態により、
+    ゲームパッド0-4のアクティブ状態を更新します。
+    """
+    for i in range(4):
+        if i == _gamepad_sw[0]:
+            # 撮る夫くんで占有
+            for k in GP_BUTTONS:
+                NXSYS.SetGamepadButtonEnable(i, k, True)
+        else:
+            # 撮る夫くんで占有しない
+            # システムのデフォルト操作に戻す
+            for k in GP_BUTTONS:
+                NXSYS.SetGamepadButtonEnable(i, k, False)
+    _save_config()
+
+
+def screenshot():
+    """スクリーンショットを撮影"""
+    # 保存パス
+    now = datetime.datetime.now()
+    sssavepath = os.path.join(SSSAVEDIR, "toruo_{}.png".format(now.strftime("%Y%m%d-%H%M%S_%f")))
+
+    # 撮影領域の特定
+    windows = list(chain.from_iterable([gw.getWindowsWithTitle(t) for t in APPNAMES]))
+    if not windows:
+        LOG('[toruo warning] VRM window not found.')
+        return
+    window = windows[0]
+
+    with msswin() as sct:
+        region = {'top':window.top, 
+                    'left':window.left, 
+                    'width':window.width, 
+                    'height':window.height,
+                }
+        screenshot = sct.grab(region)
+        mss.tools.to_png(screenshot.rgb, screenshot.size, output=sssavepath)
+    LOG("[toruo] screenshot saved on {}".format(sssavepath))
 
 
 def vecadd(vec1, vec2):
@@ -819,7 +1139,22 @@ def zrot_matrix3d(degree):
     return [[cos(theta), sin(theta), 0.0], [-1*sin(theta), cos(theta), 0.0], [0.0, 0.0, 1.0]]
 
 
+def sgn(x):
+    """Get sign of variable x."""
+    return (x > 0) - (x < 0)
+
+def clip(x, lb=None, ub=None):
+    """Clip (limit) the value of x between [lb, ub]"""
+    if ub < lb:
+        raise ValueError(f"Invalid bounds are given; lb={lb}, ub={ub}")
+    if lb is not None:
+        if x < lb:
+            return lb
+    if ub is not None:
+        if x > ub:
+            return ub
+    return x
+
 if __name__== "__main__":
     print('toruoはVRMNXシステムでのみ有効なモジュールです')
-    input("Press any key to close...")
     

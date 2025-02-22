@@ -25,7 +25,7 @@ import toruo
 # -- Project information -----------------------------------------------------
 
 project = '撮る夫くん'
-copyright = '2021, AKAGI Rails'
+copyright = '2021-2025, AKAGI Rails'
 author = 'AKAGI Rails'
 
 # The full version, including alpha/beta/rc tags

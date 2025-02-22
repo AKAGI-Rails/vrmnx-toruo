@@ -2,37 +2,30 @@
 
 ## ダウンロードとインストール
 
-### 1. ソースファイルをダウンロードする方法
+**撮る夫くん Ver. 3.4.0 からpipでのインストール方法が推奨になりました。**
 
-撮る夫くんのモジュールは以下のリンクからダウンロードできます。
-右クリックして「名前をつけてリンク先を保存」してください。
+```note::
+    撮る夫くん Ver.3.4.0 以降、他のPythonパッケージに依存するようになりました。
+    依存パッケージのインストールを同時に行えるよう、pipでのインストールが推奨になりました。
 
-- [toruo.py](https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py)
-
-_toruo.py_ は，VRMNXが`import`可能な場所に保存する必要があります。
-最もかんたんな場所は，撮る夫くんを使用する **レイアウトファイルと同じディレクトリ** です。
-
-    (root)
-    ├─ toruo.py
-    └─ YourLayout.vrmnx
-
-### 2. pipを使う方法
-
-撮る夫くんのGitリポジトリにsetupスクリプトを設置しました。Gitリポジトリからpipで撮る夫くんをインストールすることが可能です。
-
-この場合、インストール先にはVRMNXビュワー実行時のモジュール検索パスのいずれかを指定する必要があります。
-site-packagesを指定しておくことで、**レイアウトファイルの保存ディレクトリごとにtoruo.pyをコピーする必要がなくなります。**
+    従来のような、レイアウトと同じフォルダに _toruo.py_ のみを置く方法では、
+    依存パッケージが存在しないときに `ModuleNotFoundError` が発生し、撮る夫くんが動作しなくなります。
+```
 
 pipで、撮る夫くんをGitHubからインストールするコマンドは以下のようになります。（通常のインストール先の場合。）
 スタートメニューからコマンドプロンプトを立ち上げ、コマンドを入力して実行してください。
 
 VRM NXの方：
 
-    "%programfiles%\i.magic\鉄道模型シミュレーターNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git -t "%programfiles%\i.magic\鉄道模型シミュレーターNX\python\Lib\site-packages"
+```bat
+"%programfiles%\i.magic\鉄道模型シミュレーターNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git -t "%programfiles%\i.magic\鉄道模型シミュレーターNX\python\Lib\site-packages"
+```
 
 VRM Online NXの方：
 
-    "%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git -t "%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\Lib\site-packages"
+```bat
+"%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git -t "%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\Lib\site-packages"
+```
 
 アップデート、アンインストールの際は、`install`コマンドのかわりに、`update` または `uninstall`コマンドを使ってください。
 
@@ -93,10 +86,24 @@ $$ x = d^{-1/4} $$
 
 FOV操作にF値, ぼけの強さを連動させ，操作がカンタンになります。
 
-### キー操作
+### ゲームパッド操作
 
-`W/E/R, S/D/F` キーで，ズーム操作と，ズームしながら首振り操作ができます。
-撮る夫くんパネルが閉じていても有効なので，動画撮影などに便利です。
+__(Ver. 3.4.0 で追加)__
+ゲームパッドが接続されているときに、GUIパネルから撮る夫くん操作を有効にすると、
+ゲームパッドでグローバルカメラの視点が操作できるようになります。
+
+
+| 入力 | 操作 |
+| ---- | ---- |
+| 左スティック | 水平移動 |
+| 右スティック | 視線移動（見回し） |
+| L1/R1       | 垂直移動 |
+| 十字キー上下 | フォーカス遠近 |
+| 十字キー左右 | ズーム |
+| Aボタン | ダッシュ（水平・垂直移動の加速） |
+| Bボタン | スクリーンショットの撮影 |
+
+ボタン配置はX-inputです。
 
 ## 撮る夫くんの視点保存
 

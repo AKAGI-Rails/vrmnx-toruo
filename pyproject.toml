@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mypackage"
+version = "3.4.0"
+description = "VRMNX Extended Camerawork"
+authors = [
+  {name = "AKAGI"},
+]
+dependencies = [
+    "mss",
+    "pygetwindow",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
