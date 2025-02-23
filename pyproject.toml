@@ -16,5 +16,8 @@ dependencies = [
 requires-python = ">=3.10"
 readme = "README.md"
 
-[tool.setuptools]
-packages = ["toruo"]
+[tool.setuptools.packages.find]
+where = ["."] 
+include = ["toruo*"]
+exclude = ["vrmapi"]
+namespaces = false
