@@ -16,8 +16,9 @@ sys.path.insert(0, os.path.abspath('../'))
 #from unittest.mock import MagicMock
 #sys.modules['vrmapi'] = MagicMock()
 
-import recommonmark
-from recommonmark.transform import AutoStructify
+#import recommonmark
+#from recommonmark.transform import AutoStructify
+
 
 import toruo
 
@@ -43,15 +44,22 @@ extensions = [
     #'sphinx_automodapi.automodapi',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.mathjax',
     'sphinx.ext.todo',
     'sphinx.ext.githubpages',
-    'recommonmark',
+    'myst_parser',
 ]
 
 source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
+
+# MyST Parserの設定（数式サポート）
+myst_enable_extensions = [
+    "dollarmath",  # $$形式の数式
+    "amsmath",     # \begin{align}などの高度な数式
+]
 
 napoleon_use_rtype = False
 todo_include_todos = True
@@ -117,15 +125,11 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 #html_static_path = ['_static']
 
-# app setup hook
+# html_context（静的値のみ）
+html_context = {
+    "project": "撮る夫くん",
+    "version": release,
+}
 
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-        #'url_resolver': lambda url: github_doc_root + url,
-        #'auto_toc_tree_section': 'Contents',
-        #'enable_math': False,
-        #'enable_inline_math': False,
-        #'enable_eval_rst': True,
-        #'enable_auto_doc_ref': True,
-    }, True)
-    app.add_transform(AutoStructify)
+# MathJax設定
+mathjax_path = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'

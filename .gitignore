@@ -1,6 +1,8 @@
 /.vs
 /.vscode
 
+/venv
+
 *.vrmnx
 *.bak
 toruo.json
