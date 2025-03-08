@@ -24,8 +24,6 @@
 
 `toruo.py <https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py>`_
 
-Ver. 3.2.0. (2022-09-20)
-
 右クリックして「名前をつけてリンク先を保存」してご利用ください。
 
 詳細なガイドは， `クイックスタート <quickstart>`_ をごらんください。

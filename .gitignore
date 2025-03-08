@@ -1,6 +1,8 @@
 /.vs
 /.vscode
 
+/venv
+
 *.vrmnx
 *.bak
 toruo.json
@@ -9,4 +11,8 @@ toruo.json
 /release
 /_build
 
+/dist
+/toruo.egg-info
+
 /_trashbox
+NXACC.dat

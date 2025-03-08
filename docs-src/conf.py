@@ -13,11 +13,6 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
-#from unittest.mock import MagicMock
-#sys.modules['vrmapi'] = MagicMock()
-
-import recommonmark
-from recommonmark.transform import AutoStructify
 
 import toruo
 
@@ -25,7 +20,7 @@ import toruo
 # -- Project information -----------------------------------------------------
 
 project = '撮る夫くん'
-copyright = '2021, AKAGI Rails'
+copyright = '2021-2025, AKAGI Rails'
 author = 'AKAGI Rails'
 
 # The full version, including alpha/beta/rc tags
@@ -43,15 +38,22 @@ extensions = [
     #'sphinx_automodapi.automodapi',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'sphinx.ext.mathjax',
     'sphinx.ext.todo',
     'sphinx.ext.githubpages',
-    'recommonmark',
+    'myst_parser',
 ]
 
 source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
+
+# MyST Parserの設定（数式サポート）
+myst_enable_extensions = [
+    "dollarmath",  # $$形式の数式
+    "amsmath",     # \begin{align}などの高度な数式
+]
 
 napoleon_use_rtype = False
 todo_include_todos = True
@@ -85,9 +87,6 @@ html_theme_options = {
     # Set the name of the project to appear in the navigation.
     'nav_title': '撮る夫くん',
 
-    # Set you GA account ID to enable tracking
-    #'google_analytics_account': 'UA-XXXXX',
-
     # Specify a base_url used to generate sitemap.xml. If not
     # specified, then no sitemap will be built.
     'base_url': 'https://akagi-rails.github.io/vrmnx-toruo',
@@ -109,6 +108,7 @@ html_theme_options = {
     # If True, show hidden TOC entries
     'globaltoc_includehidden': False,
 }
+
 html_sidebars = {
     "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
 }
@@ -117,15 +117,11 @@ html_sidebars = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 #html_static_path = ['_static']
 
-# app setup hook
+# html_context（静的値のみ）
+html_context = {
+    "project": "撮る夫くん",
+    "version": release,
+}
 
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-        #'url_resolver': lambda url: github_doc_root + url,
-        #'auto_toc_tree_section': 'Contents',
-        #'enable_math': False,
-        #'enable_inline_math': False,
-        #'enable_eval_rst': True,
-        #'enable_auto_doc_ref': True,
-    }, True)
-    app.add_transform(AutoStructify)
+# MathJax設定
+mathjax_path = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'

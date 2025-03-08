@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "toruo"
+version = "3.4.0"
+description = "VRMNX Extended Camerawork"
+authors = [
+  {name = "AKAGI"},
+]
+dependencies = [
+    "mss == 10.0.0",
+    "pygetwindow == 0.0.9",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+
+[tool.setuptools.packages.find]
+where = ["."] 
+include = ["toruo*"]
+exclude = ["vrmapi"]
+namespaces = false

@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 
-<html lang="ja">
+<html lang="ja" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="lang:clipboard.copy" content="Copy to clipboard">
@@ -46,17 +46,16 @@
   
   
   
-    <title>撮る夫くん リファレンス &#8212; 撮る夫くん 3.3.0 ドキュメント</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/material.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/translations.js"></script>
+    <title>撮る夫くん リファレンス &#8212; 撮る夫くん 3.4.0 ドキュメント</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=75810a84" />
+    <link rel="stylesheet" type="text/css" href="_static/material.css?v=79c92029" />
+    <script src="_static/documentation_options.js?v=29f9db7e"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=4755f45a"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
-    <link rel="next" title="リリースノート" href="history.html" />
+    <link rel="next" title="取る夫くん保存機能" href="saving.html" />
     <link rel="prev" title="撮る夫くん クイックスタート" href="quickstart.html" />
   
    
@@ -81,7 +80,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="撮る夫くん 3.3.0 ドキュメント"
+        <a href="index.html" title="撮る夫くん 3.4.0 ドキュメント"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">videocam</i>
@@ -103,8 +102,8 @@
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
-    <form class="md-search__form" action="search.html" method="GET" name="search">
-      <input type="text" class="md-search__input" name="q" placeholder="Search"
+    <form class="md-search__form" action="search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
              autocapitalize="off" autocomplete="off" spellcheck="false"
              data-md-component="query" data-md-state="active">
       <label class="md-icon md-search__icon" for="__search"></label>
@@ -167,7 +166,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">撮る夫くん 3.3.0 ドキュメント</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">撮る夫くん 3.4.0 ドキュメント</a></li>
       </ul>
     </div>
   </nav>
@@ -179,13 +178,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="撮る夫くん 3.3.0 ドキュメント" class="md-nav__button md-logo">
+    <a href="index.html" title="撮る夫くん 3.4.0 ドキュメント" class="md-nav__button md-logo">
       
         <i class="md-icon">videocam</i>
       
     </a>
     <a href="index.html"
-       title="撮る夫くん 3.3.0 ドキュメント">撮る夫くん</a>
+       title="撮る夫くん 3.4.0 ドキュメント">撮る夫くん</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/AKAGI-Rails/vrmnx-toruo" title="Go to repository" class="md-source" data-md-source="github">
@@ -215,14 +214,7 @@
     
     
       <a href="quickstart.html" class="md-nav__link">クイックスタート</a>
-      <ul class="md-nav__list"> 
-    <li class="md-nav__item">
-    
-    
-      <a href="https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py" class="md-nav__link">toruo.py</a>
       
-    
-    </li></ul>
     
     </li>
     <li class="md-nav__item">
@@ -235,12 +227,48 @@
       
         
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#toruo--page-root" class="md-nav__link">撮る夫くん リファレンス</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#toruo.activate" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">activate()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.dFOV" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">dFOV</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.dMov" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">dMov</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.dRot" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">dRot</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.jump_toruo" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">jump_toruo()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.screenshot" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">screenshot()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.set_gcdist" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">set_gcdist()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.set_toruo" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">set_toruo()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.setfactor" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">setfactor()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.setshakemode" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">setshakemode()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.shake_factor" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">shake_factor</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.shake_freq" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">shake_freq</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/toruo.rst.txt">ソースコードを表示</a> </li>
 
   </ul>
 </nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="saving.html" class="md-nav__link">視点保存機能</a>
       
     
     </li>
@@ -289,7 +317,36 @@
               <div class="md-sidebar__inner">
                 
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">"Contents"</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#toruo--page-root" class="md-nav__link">撮る夫くん リファレンス</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#toruo.activate" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">activate()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.dFOV" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">dFOV</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.dMov" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">dMov</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.dRot" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">dRot</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.jump_toruo" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">jump_toruo()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.screenshot" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">screenshot()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.set_gcdist" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">set_gcdist()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.set_toruo" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">set_toruo()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.setfactor" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">setfactor()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.setshakemode" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">setshakemode()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.shake_factor" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">shake_factor</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#toruo.shake_freq" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">shake_freq</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/toruo.rst.txt">ソースコードを表示</a> </li>
 
@@ -304,8 +361,8 @@
         <div class="md-content">
           <article class="md-content__inner md-typeset" role="main">
             
-  
-<span id="id1"></span><h1 id="toruo--page-root">撮る夫くん リファレンス<a class="headerlink" href="#toruo--page-root" title="このヘッドラインへのパーマリンク">¶</a></h1>
+  <section id="module-toruo">
+<span id="id1"></span><h1 id="toruo--page-root">撮る夫くん リファレンス<a class="headerlink" href="#toruo--page-root" title="Link to this heading">¶</a></h1>
 <p>撮る夫くん - VRMNX用グローバルカメラ拡張機能</p>
 <p>VRMNX用Python拡張の <strong>撮る夫くん</strong> は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。
 ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行うことができます。</p>
@@ -316,14 +373,15 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <li><p>手ブレ風エフェクト</p></li>
 <li><p>車両追尾</p></li>
 <li><p>視点保存</p></li>
+<li><p>ゲームパッドでのカメラ操作</p></li>
 </ul>
 <p class="rubric">サンプル</p>
 <p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
 <code class="docutils literal notranslate"><span class="pre">toruo.activate()</span></code> を記述します:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">vrmnx</span>
-<span class="kn">import</span> <span class="nn">toruo</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">vrmnx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">toruo</span>
 
-<span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
     <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
         <span class="k">pass</span>
@@ -336,22 +394,22 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 </div>
 <p>撮る夫くんが内部で使用するイベントはこの領域内でuserIDを指定しています。</p>
 <dl class="py function">
-<dt id="toruo.activate">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">activate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em>, <em class="sig-param"><span class="n">ev</span></em>, <em class="sig-param"><span class="n">param</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#activate"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.activate" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.activate">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">activate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#activate"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.activate" title="Link to this definition">¶</a></dt>
 <dd><p>撮る夫くんを有効にするコマンド。</p>
 <p>レイアウトオブジェクトのイベントハンドラの先頭に書いてください。（ifの中には入れない。）:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># LAYOUT</span>
-<span class="kn">import</span> <span class="nn">vrmapi</span>
-<span class="kn">import</span> <span class="nn">toruo</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">vrmapi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">toruo</span>
 
-<span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
     <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
         <span class="k">pass</span> <span class="c1"># 以下省略</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">パラメータ</dt>
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> -- イベントハンドラが受け取るobj</p></li>
 <li><p><strong>ev</strong> -- イベントハンドラが受け取るev</p></li>
@@ -363,27 +421,27 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <cite>vrmevent</cite> が受け取ったパラメータをそのまま引き渡してください。</p>
 </dd></dl>
 <dl class="py data">
-<dt id="toruo.dFOV">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">dFOV</code><em class="property"> = 10.0</em><a class="headerlink" href="#toruo.dFOV" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.dFOV">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">dFOV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.0</span></em><a class="headerlink" href="#toruo.dFOV" title="Link to this definition">¶</a></dt>
 <dd><p>FOV操作感度</p>
 </dd></dl>
 <dl class="py data">
-<dt id="toruo.dMov">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">dMov</code><em class="property"> = 25.0</em><a class="headerlink" href="#toruo.dMov" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.dMov">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">dMov</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">25.0</span></em><a class="headerlink" href="#toruo.dMov" title="Link to this definition">¶</a></dt>
 <dd><p>移動量感度</p>
 </dd></dl>
 <dl class="py data">
-<dt id="toruo.dRot">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">dRot</code><em class="property"> = 0.5</em><a class="headerlink" href="#toruo.dRot" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.dRot">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">dRot</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.5</span></em><a class="headerlink" href="#toruo.dRot" title="Link to this definition">¶</a></dt>
 <dd><p>左右回転感度</p>
 </dd></dl>
 <dl class="py function">
-<dt id="toruo.jump_toruo">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">jump_toruo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#jump_toruo"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.jump_toruo" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.jump_toruo">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">jump_toruo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#jump_toruo"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.jump_toruo" title="Link to this definition">¶</a></dt>
 <dd><p>保存済みの撮る夫くん座標にジャンプ</p>
 <p>保存済みの撮る夫くんを <code class="docutils literal notranslate"><span class="pre">id</span></code> で呼び出し，その座標にジャンプします。</p>
 <dl class="field-list simple">
-<dt class="field-odd">パラメータ</dt>
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>id</strong> (<em>int</em>) -- 撮る夫くんの保存番号</p>
 </dd>
 </dl>
@@ -395,25 +453,30 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <p>この関数は，実行時に撮る夫くん座標に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。</p>
 </dd></dl>
 <dl class="py function">
-<dt id="toruo.set_gcdist">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">set_gcdist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dist</span><span class="o">=</span><span class="default_value">256.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#set_gcdist"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.set_gcdist" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.screenshot">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">screenshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#screenshot"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.screenshot" title="Link to this definition">¶</a></dt>
+<dd><p>スクリーンショットを撮影</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="toruo.set_gcdist">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">set_gcdist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#set_gcdist"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.set_gcdist" title="Link to this definition">¶</a></dt>
 <dd><p>グローバルカメラのfrom-toの距離を再設定する。</p>
 <p>現在の視線の向きをキープして，グローバルカメラのat座標を
 from座標からの指定距離に再設定する。</p>
 <dl class="field-list simple">
-<dt class="field-odd">パラメータ</dt>
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dist</strong> -- from-toの距離(mm)</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
-<dt id="toruo.set_toruo">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">set_toruo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fov</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">depth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fnum</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">blur</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">aemode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#set_toruo"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.set_toruo" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.set_toruo">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">set_toruo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blur</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aemode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#set_toruo"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.set_toruo" title="Link to this definition">¶</a></dt>
 <dd><p>撮る夫くんの状態を直接指定する。</p>
 <p>撮る夫くんの撮影設定パラメータを直接指定できます。
 入力パラメータはどれも省略可です。必要な項目だけキーワード引数で指定してください。</p>
 <dl class="field-list simple">
-<dt class="field-odd">パラメータ</dt>
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fov</strong> (<em>float</em>) -- FOV（ズーム角度）</p></li>
 <li><p><strong>depth</strong> (<em>float</em>) -- 合焦中心位置までの距離の逆数の4乗根</p></li>
@@ -426,10 +489,10 @@ from座標からの指定距離に再設定する。</p>
 <p>この関数は，実行時に即時反映されます。よって，適切なイベントハンドラの中で呼び出す必要があります。</p>
 <p>たとえば， initイベントで実行すると初期状態の撮る夫くんの設定ができます。</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># LAYOUT</span>
-<span class="kn">import</span> <span class="nn">vrmapi</span>
-<span class="kn">import</span> <span class="nn">toruo</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">vrmapi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">toruo</span>
 
-<span class="k">def</span> <span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
     <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
         <span class="n">toruo</span><span class="o">.</span><span class="n">set_toruo</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">512</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">),</span> <span class="n">fnum</span><span class="o">=</span><span class="mf">9.0</span><span class="p">)</span>
@@ -438,12 +501,12 @@ from座標からの指定距離に再設定する。</p>
 <p>カメラ座標は <code class="docutils literal notranslate"><span class="pre">vrmapi.SYSTEM().SetGlobalCameraPos()</span></code> によってください。</p>
 </dd></dl>
 <dl class="py function">
-<dt id="toruo.setfactor">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">setfactor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rotate</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">fov</span><span class="o">=</span><span class="default_value">10.0</span></em>, <em class="sig-param"><span class="n">move</span><span class="o">=</span><span class="default_value">25.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#setfactor"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.setfactor" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.setfactor">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">setfactor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">move</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#setfactor"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.setfactor" title="Link to this definition">¶</a></dt>
 <dd><p>キー操作と手ブレの感度パラメータを設定</p>
 <p>v.3.0.7ではmoveは不使用です。</p>
 <dl class="field-list simple">
-<dt class="field-odd">パラメータ</dt>
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rotate</strong> (<em>float</em>) -- 画角回転の感度 (default=0.5)</p></li>
 <li><p><strong>fov</strong> (<em>float</em>) -- ズーム感度 (default=10.0)</p></li>
@@ -452,26 +515,26 @@ from座標からの指定距離に再設定する。</p>
 </dl>
 </dd></dl>
 <dl class="py function">
-<dt id="toruo.setshakemode">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">setshakemode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#setshakemode"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#toruo.setshakemode" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.setshakemode">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">setshakemode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/toruo.html#setshakemode"><span class="viewcode-link"><span class="pre">[ソース]</span></span></a><a class="headerlink" href="#toruo.setshakemode" title="Link to this definition">¶</a></dt>
 <dd><p>手ブレモードを設定</p>
 <dl class="field-list simple">
-<dt class="field-odd">パラメータ</dt>
+<dt class="field-odd">パラメータ<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>mode</strong> (<em>Bool</em>) -- Trueで手ブレON</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py data">
-<dt id="toruo.shake_factor">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">shake_factor</code><em class="property"> = 0.1</em><a class="headerlink" href="#toruo.shake_factor" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.shake_factor">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">shake_factor</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#toruo.shake_factor" title="Link to this definition">¶</a></dt>
 <dd><p>手ブレ量</p>
 </dd></dl>
 <dl class="py data">
-<dt id="toruo.shake_freq">
-<code class="sig-prename descclassname">toruo.</code><code class="sig-name descname">shake_freq</code><em class="property"> = 4.0</em><a class="headerlink" href="#toruo.shake_freq" title="この定義へのパーマリンク">¶</a></dt>
+<dt class="sig sig-object py" id="toruo.shake_freq">
+<span class="sig-prename descclassname"><span class="pre">toruo.</span></span><span class="sig-name descname"><span class="pre">shake_freq</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4.0</span></em><a class="headerlink" href="#toruo.shake_freq" title="Link to this definition">¶</a></dt>
 <dd><p>手ブレ周波数</p>
 </dd></dl>
-
+</section>
 
 
           </article>
@@ -492,17 +555,17 @@ from座標からの指定距離に再設定する。</p>
               <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
                 <span class="md-flex__ellipsis">
                   <span
-                      class="md-footer-nav__direction"> Previous </span> 撮る夫くん　クイックスタート </span>
+                      class="md-footer-nav__direction"> "Previous" </span> 撮る夫くん　クイックスタート </span>
               </div>
             </a>
           
           
-            <a href="history.html" title="リリースノート"
+            <a href="saving.html" title="取る夫くん保存機能"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> リリースノート </span>
+                class="md-footer-nav__direction"> "Next" </span> 取る夫くん保存機能 </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
@@ -516,11 +579,11 @@ from座標からの指定距離に再設定する。</p>
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2021, AKAGI Rails.
+              &#169; Copyright 2021-2025, AKAGI Rails.
               
           </div>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>
