@@ -1,6 +1,6 @@
 @rem toruo setup for VRMNX
 
-"%programfiles%\i.magic\驩�驕捺ｨ｡蝙九す繝溘Η繝ｬ繝ｼ繧ｿ繝ｼNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git --user
+"%programfiles%\i.magic\鉄道模型シミュレーターNX\python\python.exe" -m pip install . --user
 
 @pause
 exit
