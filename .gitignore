@@ -10,6 +10,7 @@ toruo.json
 /__pycache__
 /release
 /_build
+/build
 
 /dist
 /toruo.egg-info
