@@ -40,7 +40,7 @@ Example:
     撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
     ``toruo.activate()`` を記述します::
     
-        import vrmnx
+        import vrmapi
         import toruo
         
         def vrmevent(obj,ev,param):
@@ -183,7 +183,7 @@ def activate(obj, ev, param):
         def vrmevent(obj,ev,param):
             toruo.activate(obj,ev,param)
             if ev == 'init':
-                pass # 以下省略
+                pass  # 以下省略
             
     Args:
         obj:    イベントハンドラが受け取るobj
