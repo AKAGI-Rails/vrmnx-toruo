@@ -39,11 +39,12 @@ VRM Online NXの方：
 2. イベントハンドラの冒頭に ``activate()`` を記述します。
 
 ```python
-import vrmnx
+import vrmapi
 import toruo  # インポート文を記述する
 
 def vrmevent(obj,ev,param):
     toruo.activate(obj,ev,param)  # activateを記述する
+    # 以下には手を加える必要はありません。
     if ev == 'init':
         pass 
     # 以下省略

@@ -39,11 +39,12 @@ VRM Online NXの方：
 2. イベントハンドラの冒頭に ``activate()`` を記述します。
 
 ```python
-import vrmnx
+import vrmapi
 import toruo  # インポート文を記述する
 
 def vrmevent(obj,ev,param):
     toruo.activate(obj,ev,param)  # activateを記述する
+    # 以下には手を加える必要はありません。
     if ev == 'init':
         pass 
     # 以下省略
@@ -67,9 +68,9 @@ def vrmevent(obj,ev,param):
 数字が小さいほど遠くに，数字が大きいほど近くにピントが合います。
 
 VRMNX上の距離(mm)の逆数の4乗根の数字になっています。
-つまり，距離を$d$, 合焦距離のパラメータを $x$ として，
+つまり，距離を $d$, 合焦距離のパラメータを $x$ として，
 
-$$ x = d^{-1/4} $$
+$$ x = d^{-\frac{1}{4}} $$
 
 です。
 

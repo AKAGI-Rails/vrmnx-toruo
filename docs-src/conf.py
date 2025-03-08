@@ -13,12 +13,6 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
-#from unittest.mock import MagicMock
-#sys.modules['vrmapi'] = MagicMock()
-
-#import recommonmark
-#from recommonmark.transform import AutoStructify
-
 
 import toruo
 
@@ -93,9 +87,6 @@ html_theme_options = {
     # Set the name of the project to appear in the navigation.
     'nav_title': '撮る夫くん',
 
-    # Set you GA account ID to enable tracking
-    #'google_analytics_account': 'UA-XXXXX',
-
     # Specify a base_url used to generate sitemap.xml. If not
     # specified, then no sitemap will be built.
     'base_url': 'https://akagi-rails.github.io/vrmnx-toruo',
@@ -117,6 +108,7 @@ html_theme_options = {
     # If True, show hidden TOC entries
     'globaltoc_includehidden': False,
 }
+
 html_sidebars = {
     "**": ["logo-text.html", "globaltoc.html", "localtoc.html", "searchbox.html"]
 }

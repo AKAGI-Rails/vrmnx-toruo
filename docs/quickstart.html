@@ -411,11 +411,12 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">import</span></code> 文を記述します。</p></li>
 <li><p>イベントハンドラの冒頭に <code class="docutils literal notranslate"><span class="pre">activate()</span></code> を記述します。</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">vrmnx</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">vrmapi</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">toruo</span>  <span class="c1"># インポート文を記述する</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
     <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>  <span class="c1"># activateを記述する</span>
+    <span class="c1"># 以下には手を加える必要はありません。</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
         <span class="k">pass</span> 
     <span class="c1"># 以下省略</span>
@@ -436,9 +437,9 @@
 <h3 id="id5">合焦距離<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <p>数字が小さいほど遠くに，数字が大きいほど近くにピントが合います。</p>
 <p>VRMNX上の距離(mm)の逆数の4乗根の数字になっています。
-つまり，距離を<span class="math notranslate nohighlight">\(d\)</span>, 合焦距離のパラメータを <span class="math notranslate nohighlight">\(x\)</span> として，</p>
+つまり，距離を <span class="math notranslate nohighlight">\(d\)</span>, 合焦距離のパラメータを <span class="math notranslate nohighlight">\(x\)</span> として，</p>
 <div class="math notranslate nohighlight">
-\[ x = d^{-1/4} \]</div>
+\[ x = d^{-\frac{1}{4}} \]</div>
 <p>です。</p>
 </section>
 <section id="f">
