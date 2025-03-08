@@ -378,7 +378,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <p class="rubric">サンプル</p>
 <p>撮る夫くんを有効にするには，レイアウトのイベントハンドラの冒頭に
 <code class="docutils literal notranslate"><span class="pre">toruo.activate()</span></code> を記述します:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">vrmnx</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">vrmapi</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">toruo</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
@@ -405,7 +405,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 <span class="k">def</span><span class="w"> </span><span class="nf">vrmevent</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">):</span>
     <span class="n">toruo</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">ev</span><span class="p">,</span><span class="n">param</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ev</span> <span class="o">==</span> <span class="s1">'init'</span><span class="p">:</span>
-        <span class="k">pass</span> <span class="c1"># 以下省略</span>
+        <span class="k">pass</span>  <span class="c1"># 以下省略</span>
 </pre></div>
 </div>
 <dl class="field-list simple">

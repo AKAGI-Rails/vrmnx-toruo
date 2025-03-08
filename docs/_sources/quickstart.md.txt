@@ -4,27 +4,27 @@
 
 **撮る夫くん Ver. 3.4.0 からpipでのインストール方法が推奨になりました。**
 
-```note::
-    撮る夫くん Ver.3.4.0 以降、他のPythonパッケージに依存するようになりました。
-    依存パッケージのインストールを同時に行えるよう、pipでのインストールが推奨になりました。
-
-    従来のような、レイアウトと同じフォルダに _toruo.py_ のみを置く方法では、
-    依存パッケージが存在しないときに `ModuleNotFoundError` が発生し、撮る夫くんが動作しなくなります。
+```{tip}
+撮る夫くん Ver.3.4.0 以降、他のPythonパッケージに依存するようになりました。
+依存パッケージのインストールを同時に行えるよう、pipでのインストールが推奨になりました。
 ```
 
-pipで、撮る夫くんをGitHubからインストールするコマンドは以下のようになります。（通常のインストール先の場合。）
-スタートメニューからコマンドプロンプトを立ち上げ、コマンドを入力して実行してください。
-
-VRM NXの方：
-
-```bat
-"%programfiles%\i.magic\鉄道模型シミュレーターNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git --user
+```{attention}
+従来のような、レイアウトと同じフォルダに _toruo.py_ のみを置く方法では、
+依存パッケージが存在しないときに `ModuleNotFoundError` が発生し、撮る夫くんが動作しなくなります。
 ```
 
-VRM Online NXの方：
+まず、撮る夫くん一式を[zipファイルでダウンロード](https://github.com/AKAGI-Rails/vrmnx-toruo/archive/refs/heads/master.zip)し、解凍します。
 
-```bat
-"%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git --user
+zipアーカイブに、pipコマンドを実行するバッチファイル (.bat) を同梱しているので、お使いのVRM NXシステムに合ったものを実行してください。自動的に `pip install` コマンドが実行されます。
+
+* VRMNXの方は、 **toruo-for-vrmnx.bat** を実行します。
+* VRM Online NXの方は、 **toruo-for-vrmonlinenx.bat** を実行します。
+
+エラーにならず、次のメッセージが表示されれば成功です。
+
+```pre
+Successfully installed toruo-3.4.0
 ```
 
 アップデート、アンインストールの際は、`install`コマンドのかわりに、`update` または `uninstall`コマンドを使ってください。

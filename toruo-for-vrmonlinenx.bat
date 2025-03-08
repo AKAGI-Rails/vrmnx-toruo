@@ -1,6 +1,6 @@
 @rem toruo setup for VRMONLINE-NX
 
-"%programfiles%\i.magic\驩�驕捺ｨ｡蝙九す繝溘Η繝ｬ繝ｼ繧ｿ繝ｼ繧ｪ繝ｳ繝ｩ繧､繝ｳNX\python\python.exe" -m pip install git+https://github.com/AKAGI-Rails/vrmnx-toruo.git --user
+"%programfiles%\i.magic\鉄道模型シミュレーターオンラインNX\python\python.exe" -m pip install . --user
 
 @pause
 exit

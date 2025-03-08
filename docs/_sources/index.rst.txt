@@ -22,7 +22,7 @@
 ダウンロード
 ----------------
 
-`toruo.py <https://raw.githubusercontent.com/AKAGI-Rails/vrmnx-toruo/master/toruo.py>`_
+`撮る夫くん 一式 <https://github.com/AKAGI-Rails/vrmnx-toruo/archive/refs/heads/master.zip>`_
 
 右クリックして「名前をつけてリンク先を保存」してご利用ください。
 
