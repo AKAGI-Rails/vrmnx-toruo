@@ -264,7 +264,7 @@ def activate(obj, ev, param):
     """
     # ゲームパッド操作
     if _gamepad_sw[0] in [0,1,2,3]:
-        gp = _gamepad_sw[0]
+        gp = _gamepad_sw[0]  # ゲームパッドを取得
 
         # スクリーンショット(mss)
         if NXSYS.GetGamepadB(gp):
@@ -326,12 +326,14 @@ def activate(obj, ev, param):
     # 追尾処理
     istracking = False  # 初期化
 
-    if _toruomode[0] == 1 and _tracking_car:  # 追尾モード時
+    if _toruomode[0] == 1 and _tracking_car:
+        # 追尾モード時
         if _fuzzytrack[0]:
             tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
         else:
             tgtpos = _getcarworldpos(car=_tracking_car)
-        vrmapi.LOG(str(tgtpos))
+        if DEBUG:
+            vrmapi.LOG(str(tgtpos))
         dist = vecdistance(campos[0:3], tgtpos)
         if dist < _tracking_dist[0]:
             istracking = True
@@ -343,6 +345,47 @@ def activate(obj, ev, param):
                 #_blur[0] = 2*(135.0-_fov[0])/125.0
                 _focus()
 
+    if _toruomode[0] == 2 and _tracking_car:
+        # 前方回転モード時
+        # atの取得
+        if _fuzzytrack[0]:
+            tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
+        else:
+            tgtpos = _getcarworldpos(car=_tracking_car)
+        if DEBUG:
+            pass
+            #vrmapi.LOG(str(tgtpos))
+        # fromを車両ローカルからグローバルに計算
+        carpos = _tracking_car.GetPosition()
+        carrotx = _tracking_car.GetRotateX()
+        carroty = _tracking_car.GetRotateY()
+        carrotz = _tracking_car.GetRotateZ()
+
+        r = _following_relpos['r'][0]
+        theta = (_following_relpos['theta'][0] + carroty) * pi / 180.0
+        phi = _following_relpos['phi'][0] * pi / 180.0
+
+        rel_x = r * sin(pi /2 - phi) * cos(theta + pi)
+        rel_z = r * sin(pi /2 - phi) * sin(theta + pi)
+        rel_y = r * cos(pi /2 - phi)
+
+        campos = vecadd(tgtpos, [rel_x, rel_y, rel_z]) + tgtpos
+
+        if _tracking_af[0]:
+            # オートフォーカス
+            _depth[0] = pow(r, -0.25)  
+
+        # 手ブレモード用flg
+        istracking = True
+
+        IMGUI.Begin("ToruoDebug", "撮る夫デバッグウィンドウ")
+        IMGUI.Text("carpos {:2f}, {:.2f}, {:.2f}".format(*carpos))
+        IMGUI.Text("tgtpos {:2f}, {:.2f}, {:.2f}".format(*tgtpos))
+        IMGUI.Text("carrot {:2f}, {:.2f}, {:.2f}".format(carrotx, carroty, carrotz))
+        IMGUI.Text("{:2f}, {:.2f}, {:.2f}".format(rel_x, rel_y, rel_z))
+        IMGUI.Text(f"{campos}")
+        IMGUI.End()
+    
     # ブレ計算
     if _shakemode[0]:
         if istracking:
@@ -355,6 +398,7 @@ def activate(obj, ev, param):
             _rotatevt(campos, _shake_dvt, ftime)
             
     NXSYS.SetGlobalCameraPos(campos)
+    LOG('Toruo OK')
 
 
 def jump_toruo(id=0):
@@ -906,6 +950,7 @@ def _dispgui():
         IMGUI.SameLine()
         if IMGUI.RadioButton("toruomode2_follow", "前方回転", _toruomode, 2):
             if _tracking_car is not None:
+                print("toruomode", _toruomode[0])
                 _init_following_cam()
             else:
                 # 追尾対象車両が未指定の場合は強制的にノーマルに戻す
