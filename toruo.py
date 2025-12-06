@@ -270,38 +270,51 @@ def activate(obj, ev, param):
         if NXSYS.GetGamepadB(gp):
             screenshot()
 
-        # ダッシュ処理
-        if NXSYS.GetGamepadA(gp):
-            _dash_factor += DASH_DIFF * ftime
+
+        if _toruomode[0] != 2:  # 前方回転モード以外
+            # ダッシュ処理
+            if NXSYS.GetGamepadA(gp):
+                _dash_factor += DASH_DIFF * ftime
+            else:
+                _dash_factor -= DASH_DIFF * ftime
+            _dash_factor = clip(_dash_factor, 1.0, DASH_MAX)
+
+            # 並進移動
+            # 左スティック・水平面
+            LX = NXSYS.GetGamepadAnalogStickLX(gp)
+            LY = NXSYS.GetGamepadAnalogStickLY(gp)
+            # 上下移動
+            v = 0
+            if NXSYS.GetGamepadRB(gp):
+                v += +1 * _gamepad_param['v_sense'][0]
+            if NXSYS.GetGamepadLB(gp):
+                v += -1 * _gamepad_param['v_sense'][0]
+            if abs(LX) > 100 or abs(LY) > 100 or v != 0:
+                _move(campos, adjust_analogL(LX)*_dash_factor, v*_dash_factor, adjust_analogL(LY)*_dash_factor, ftime)
+            else:
+                if not NXSYS.GetGamepadA(gp):
+                    _dash_factor = 1.0
+
+            # 見回し（ゲームパッド）
+            RX = NXSYS.GetGamepadAnalogStickRX(gp)
+            if abs(RX) > 100:
+                _rotate(campos, adjust_analogR(RX), ftime)
+
+            RY = NXSYS.GetGamepadAnalogStickRY(gp)
+            if abs(RY) > 100:
+                _rotatevt(campos, adjust_analogR(RY)*_gamepad_RYsgn, ftime)
         else:
-            _dash_factor -= DASH_DIFF * ftime
-        _dash_factor = clip(_dash_factor, 1.0, DASH_MAX)
+            # 前方回転モードの操作
+            LY = NXSYS.GetGamepadAnalogStickLY(gp)
+            _following_relpos['r'][0] = clip(_following_relpos['r'][0] - dMov * adjust_analogL(LY) * ftime * 0.0005, 16, 4321.0)
+            
+            RX = NXSYS.GetGamepadAnalogStickRX(gp)
+            if abs(RX) > 100:
+                _following_relpos['theta'][0] = _following_relpos['theta'][0] - dRot * adjust_analogR(RX) * ftime * 100
 
-        # 並進移動
-        # 左スティック・水平面
-        LX = NXSYS.GetGamepadAnalogStickLX(gp)
-        LY = NXSYS.GetGamepadAnalogStickLY(gp)
-        # 上下移動
-        v = 0
-        if NXSYS.GetGamepadRB(gp):
-            v += +1 * _gamepad_param['v_sense'][0]
-        if NXSYS.GetGamepadLB(gp):
-            v += -1 * _gamepad_param['v_sense'][0]
-        if abs(LX) > 100 or abs(LY) > 100 or v != 0:
-            _move(campos, adjust_analogL(LX)*_dash_factor, v*_dash_factor, adjust_analogL(LY)*_dash_factor, ftime)
-        else:
-            if not NXSYS.GetGamepadA(gp):
-                _dash_factor = 1.0
-
-        # 見回し（ゲームパッド）
-        RX = NXSYS.GetGamepadAnalogStickRX(gp)
-        if abs(RX) > 100:
-            _rotate(campos, adjust_analogR(RX), ftime)
-
-        RY = NXSYS.GetGamepadAnalogStickRY(gp)
-        if abs(RY) > 100:
-            _rotatevt(campos, adjust_analogR(RY)*_gamepad_RYsgn, ftime)
-
+            RY = NXSYS.GetGamepadAnalogStickRY(gp)
+            if abs(RY) > 100:
+                _following_relpos['phi'][0] = _following_relpos['phi'][0] + dRot * adjust_analogR(RY)*_gamepad_RYsgn * ftime * 100
         # ズームイン・ズームアウト（ゲームパッド）
         stat = NXSYS.GetGamepadLEFT(gp)
         if stat:
