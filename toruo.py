@@ -954,12 +954,20 @@ def _dispgui():
         IMGUI.RadioButton("toruomode1_track", "追尾モード", _toruomode, 1)
         IMGUI.SameLine()
         if IMGUI.RadioButton("toruomode2_follow", "前方回転", _toruomode, 2):
-            if _tracking_car is not None:
-                print("toruomode", _toruomode[0])
-                _init_following_cam()
-            else:
-                # 追尾対象車両が未指定の場合は強制的にノーマルに戻す
-                _toruomode[0] = 0
+            if _tracking_car is None:
+                # 追尾対象車両が未指定の場合、操作対象編成を追尾対象編成にしようとする
+                d = LAYOUT.GetActive()
+                if d['type'] == 'train':
+                    trn = d['object']
+                    if trn.GetDirection() == 1:
+                        i = 0
+                    else:
+                        i = -1
+                    _tracking_trainid[0] = trn.GetID()
+                    _tracking_car = trn.GetCarList()[i]  # 追尾対象車両は、アクティブ編成の進行方向先頭車
+                else:
+                    # 編成の取得に失敗してたら戻る
+                    _toruomode[0] = 0
         IMGUI.Checkbox("trackaf", "オートフォーカス", _tracking_af)
 
         if IMGUI.TreeNode("targettrn", "対象の編成"):
@@ -1097,12 +1105,6 @@ def _dispgui():
         IMGUI.Text("L   : {:.3f}, {:.3f}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
         IMGUI.Text("Dash: {:.2f}".format(_dash_factor))
     IMGUI.End()
-
-def _init_following_cam():
-    """前方回転カメラを初期化
-    
-    前方回転モードになったらキックされる。
-    """
 
 def _change_gamepad():
     """ゲームパッドのアクティブ状態を更新。
