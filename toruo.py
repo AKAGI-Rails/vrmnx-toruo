@@ -1104,6 +1104,7 @@ def _dispgui():
         IMGUI.Text("Dist: {:.2f}".format(vecdistance(pos_from, pos_at)))
         IMGUI.Text("L   : {:.3f}, {:.3f}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
         IMGUI.Text("Dash: {:.2f}".format(_dash_factor))
+    IMGUI.Text('撮る夫くん Ver.{}'.format(__version__))
     IMGUI.End()
 
 def _change_gamepad():
