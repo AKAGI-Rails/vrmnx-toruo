@@ -125,9 +125,11 @@ dMov = 25.0         #: 移動量感度
 shake_factor = 0.1  #: 手ブレ量
 shake_freq = 4.0    #: 手ブレ周波数
 
+# カメラモード選択
+_toruomode = [0]  #: 撮る夫くんのモード状態 0=ノーマル、1=追尾, 2=前方回転
+
 # 追尾モード
 _trainlist = {'obj':[], 'id':[], 'name':[]}
-_tracking_mode = [False]
 _fuzzytrack = [False]
 _tracking_car = None
 _tracking_trainid = [0]
@@ -136,6 +138,9 @@ _tracking_carnum = [0]
 _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
+
+# 前方回転モード
+_following_relpos = {'r':[256.0], 'theta':[0.0], 'phi':[0.0]}  # r:動径, theta:水平角, phi:垂直角  角度はdegree
 
 # ゲームパッドFLG
 _GPlist = [False, False, False, False]  #: 接続されているとTrue 
@@ -321,7 +326,7 @@ def activate(obj, ev, param):
     # 追尾処理
     istracking = False  # 初期化
 
-    if _tracking_mode[0] and _tracking_car:
+    if _toruomode[0] == 1 and _tracking_car:  # 追尾モード時
         if _fuzzytrack[0]:
             tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
         else:
@@ -847,7 +852,7 @@ def _dispgui():
     global _depth
     global _fnum
     global _trainlist
-    global _tracking_mode
+    global _toruomode
     global _tracking_car
     global _tracking_trainid
     global _tracking_trnlen
@@ -894,10 +899,19 @@ def _dispgui():
             _save_config()
         IMGUI.TreePop()
 
-    if IMGUI.TreeNode("target", "追尾モード"):
-        IMGUI.Checkbox("trackmode", "追尾モード", _tracking_mode)
+    if IMGUI.TreeNode("target", "モード選択"):
+        IMGUI.RadioButton("toruomode0_normal", "ノーマル", _toruomode, 0)
         IMGUI.SameLine()
+        IMGUI.RadioButton("toruomode1_track", "追尾モード", _toruomode, 1)
+        IMGUI.SameLine()
+        if IMGUI.RadioButton("toruomode2_follow", "前方回転", _toruomode, 2):
+            if _tracking_car is not None:
+                _init_following_cam()
+            else:
+                # 追尾対象車両が未指定の場合は強制的にノーマルに戻す
+                _toruomode[0] = 0
         IMGUI.Checkbox("trackaf", "オートフォーカス", _tracking_af)
+
         if IMGUI.TreeNode("targettrn", "対象の編成"):
             if IMGUI.Button("trnlist", "編成リストを更新"):
                 _refresh_trainlist()
@@ -923,7 +937,15 @@ def _dispgui():
         IMGUI.SliderFloat("relx", "相対X", _tracking_relative['x'], -150.0, 150.0)
         IMGUI.SliderFloat("rely", "相対Y", _tracking_relative['y'], -150.0, 150.0)
         IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -150.0, 150.0)
-        IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)
+
+        if _toruomode[0] == 1:  # 追尾モード
+            IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)  # 追尾モードだけ。前方回転モードでは不使用
+        if _toruomode[0] == 2:  # 前方回転モード
+            if IMGUI.TreeNode('following_rel_pad', "前方回転カメラ操作"):
+                IMGUI.SliderFloat('following_rel_r', "相対距離", _following_relpos['r'], 16.0, 1024.0)
+                IMGUI.SliderFloat('following_rel_theta', "水平角度", _following_relpos['theta'], -180.0, 180.0)
+                IMGUI.SliderFloat('following_rel_phi', "垂直角度", _following_relpos['phi'], -85.0, 85.0)
+                IMGUI.TreePop()
         IMGUI.Text(str(_tracking_car))
         IMGUI.TreePop()
 
@@ -1019,13 +1041,18 @@ def _dispgui():
         pos = NXSYS.GetGlobalCameraPos()
         pos_from = pos[:3]
         pos_at = pos[3:]
-        IMGUI.Text("From: {}".format(pos_from))
-        IMGUI.Text("At  : {}".format(pos_at))
-        IMGUI.Text("Dist: {}".format(vecdistance(pos_from, pos_at)))
-        IMGUI.Text("L   : {}, {}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
-        IMGUI.Text("Dash: {}".format(_dash_factor))
+        IMGUI.Text("From: {:.2f},{:.2f},{:.2f}".format(*pos_from))
+        IMGUI.Text("At  : {:.2f},{:.2f},{:.2f}".format(*pos_at))
+        IMGUI.Text("Dist: {:.2f}".format(vecdistance(pos_from, pos_at)))
+        IMGUI.Text("L   : {:.3f}, {:.3f}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
+        IMGUI.Text("Dash: {:.2f}".format(_dash_factor))
     IMGUI.End()
 
+def _init_following_cam():
+    """前方回転カメラを初期化
+    
+    前方回転モードになったらキックされる。
+    """
 
 def _change_gamepad():
     """ゲームパッドのアクティブ状態を更新。
