@@ -390,14 +390,6 @@ def activate(obj, ev, param):
 
         # 手ブレモード用flg
         istracking = True
-
-        IMGUI.Begin("ToruoDebug", "撮る夫デバッグウィンドウ")
-        IMGUI.Text("carpos {:2f}, {:.2f}, {:.2f}".format(*carpos))
-        IMGUI.Text("tgtpos {:2f}, {:.2f}, {:.2f}".format(*tgtpos))
-        IMGUI.Text("carrot {:2f}, {:.2f}, {:.2f}".format(carrotx, carroty, carrotz))
-        IMGUI.Text("{:2f}, {:.2f}, {:.2f}".format(rel_x, rel_y, rel_z))
-        IMGUI.Text(f"{campos}")
-        IMGUI.End()
     
     # ブレ計算
     if _shakemode[0]:
