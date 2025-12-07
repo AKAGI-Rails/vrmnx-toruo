@@ -126,7 +126,7 @@ shake_factor = 0.1  #: 手ブレ量
 shake_freq = 4.0    #: 手ブレ周波数
 
 # カメラモード選択
-_toruomode = [0]  #: 撮る夫くんのモード状態 0=ノーマル、1=追尾, 2=前方回転
+_toruomode = [0]  #: 撮る夫くんのモード状態 0=ノーマル、1=追尾, 2=追い撮り
 
 # 追尾モード
 _trainlist = {'obj':[], 'id':[], 'name':[]}
@@ -139,7 +139,7 @@ _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
 
-# 前方回転モード
+# 追い撮りモード
 _following_relpos = {'r':[256.0], 'theta':[0.0], 'phi':[0.0]}  # r:動径, theta:水平角, phi:垂直角  角度はdegree
 
 # ゲームパッドFLG
@@ -271,7 +271,7 @@ def activate(obj, ev, param):
             screenshot()
 
 
-        if _toruomode[0] != 2:  # 前方回転モード以外
+        if _toruomode[0] != 2:  # 追い撮りモード以外
             # ダッシュ処理
             if NXSYS.GetGamepadA(gp):
                 _dash_factor += DASH_DIFF * ftime
@@ -304,7 +304,7 @@ def activate(obj, ev, param):
             if abs(RY) > 100:
                 _rotatevt(campos, adjust_analogR(RY)*_gamepad_RYsgn, ftime)
         else:
-            # 前方回転モードの操作
+            # 追い撮りモードの操作
             LY = NXSYS.GetGamepadAnalogStickLY(gp)
             _following_relpos['r'][0] = clip(_following_relpos['r'][0] - dMov * adjust_analogL(LY) * ftime * 0.0005, 16, 4321.0)
             
@@ -359,7 +359,7 @@ def activate(obj, ev, param):
                 _focus()
 
     if _toruomode[0] == 2 and _tracking_car:
-        # 前方回転モード時
+        # 追い撮りモード時
         # atの取得
         if _fuzzytrack[0]:
             tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
@@ -951,9 +951,9 @@ def _dispgui():
     if IMGUI.TreeNode("target", "モード選択"):
         IMGUI.RadioButton("toruomode0_normal", "ノーマル", _toruomode, 0)
         IMGUI.SameLine()
-        IMGUI.RadioButton("toruomode1_track", "追尾モード", _toruomode, 1)
+        IMGUI.RadioButton("toruomode1_track", "列車追尾モード", _toruomode, 1)
         IMGUI.SameLine()
-        if IMGUI.RadioButton("toruomode2_follow", "前方回転", _toruomode, 2):
+        if IMGUI.RadioButton("toruomode2_follow", "追い撮り", _toruomode, 2):
             if _tracking_car is None:
                 # 追尾対象車両が未指定の場合、操作対象編成を追尾対象編成にしようとする
                 d = LAYOUT.GetActive()
@@ -997,9 +997,9 @@ def _dispgui():
         IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -150.0, 150.0)
 
         if _toruomode[0] == 1:  # 追尾モード
-            IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)  # 追尾モードだけ。前方回転モードでは不使用
-        if _toruomode[0] == 2:  # 前方回転モード
-            if IMGUI.TreeNode('following_rel_pad', "前方回転カメラ操作"):
+            IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)  # 追尾モードだけ。追い撮りモードでは不使用
+        if _toruomode[0] == 2:  # 追い撮りモード
+            if IMGUI.TreeNode('following_rel_pad', "追い撮りカメラ操作"):
                 IMGUI.SliderFloat('following_rel_r', "相対距離", _following_relpos['r'], 16.0, 1024.0)
                 IMGUI.SliderFloat('following_rel_theta', "水平角度", _following_relpos['theta'], -180.0, 180.0)
                 IMGUI.SliderFloat('following_rel_phi', "垂直角度", _following_relpos['phi'], -85.0, 85.0)
