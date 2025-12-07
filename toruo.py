@@ -270,7 +270,6 @@ def activate(obj, ev, param):
         if NXSYS.GetGamepadB(gp):
             screenshot()
 
-
         if _toruomode[0] != 2:  # 追い撮りモード以外
             # ダッシュ処理
             if NXSYS.GetGamepadA(gp):
@@ -345,8 +344,6 @@ def activate(obj, ev, param):
             tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
         else:
             tgtpos = _getcarworldpos(car=_tracking_car)
-        if DEBUG:
-            vrmapi.LOG(str(tgtpos))
         dist = vecdistance(campos[0:3], tgtpos)
         if dist < _tracking_dist[0]:
             istracking = True
@@ -365,14 +362,8 @@ def activate(obj, ev, param):
             tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
         else:
             tgtpos = _getcarworldpos(car=_tracking_car)
-        if DEBUG:
-            pass
-            #vrmapi.LOG(str(tgtpos))
         # fromを車両ローカルからグローバルに計算
-        carpos = _tracking_car.GetPosition()
-        carrotx = _tracking_car.GetRotateX()
         carroty = _tracking_car.GetRotateY()
-        carrotz = _tracking_car.GetRotateZ()
 
         r = _following_relpos['r'][0]
         theta = (_following_relpos['theta'][0] + carroty) * pi / 180.0
@@ -386,7 +377,8 @@ def activate(obj, ev, param):
 
         if _tracking_af[0]:
             # オートフォーカス
-            _depth[0] = pow(r, -0.25)  
+            _depth[0] = pow(r, -0.25)
+            _focus()
 
         # 手ブレモード用flg
         istracking = True
@@ -821,6 +813,7 @@ def adjust_analogL(x):
     y = sgnx * ((absx/ANALOG_MAX)**_gamepad_param['L0_exp'][0]) * _gamepad_param['L0_sense'][0] * ANALOG_MAX
     return y
 
+
 def _rotate(campos, spd, ftime):
     """水平方向見回し
 
@@ -1106,6 +1099,7 @@ def _dispgui():
         IMGUI.Text("Dash: {:.2f}".format(_dash_factor))
     IMGUI.Text('撮る夫くん Ver.{}'.format(__version__))
     IMGUI.End()
+
 
 def _change_gamepad():
     """ゲームパッドのアクティブ状態を更新。
