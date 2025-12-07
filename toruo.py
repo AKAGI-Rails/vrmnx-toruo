@@ -60,7 +60,7 @@ Example:
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',
            'screenshot']
-__version__ = '3.4.0'
+__version__ = '3.5.0'
 __author__ = "AKAGI"
 
 try:
