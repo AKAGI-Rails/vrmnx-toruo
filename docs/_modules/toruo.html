@@ -45,10 +45,10 @@
   
   
   
-    <title>toruo &#8212; 撮る夫くん 3.4.0 ドキュメント</title>
+    <title>toruo &#8212; 撮る夫くん 3.5.0 ドキュメント</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=75810a84" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css?v=79c92029" />
-    <script src="../_static/documentation_options.js?v=29f9db7e"></script>
+    <script src="../_static/documentation_options.js?v=582c9127"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/translations.js?v=4755f45a"></script>
@@ -77,7 +77,7 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="撮る夫くん 3.4.0 ドキュメント"
+        <a href="../index.html" title="撮る夫くん 3.5.0 ドキュメント"
            class="md-header-nav__button md-logo">
           
             <i class="md-icon">videocam</i>
@@ -163,7 +163,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">撮る夫くん 3.4.0 ドキュメント</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">撮る夫くん 3.5.0 ドキュメント</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">モジュールコード</a></li>
       </ul>
     </div>
@@ -176,13 +176,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="撮る夫くん 3.4.0 ドキュメント" class="md-nav__button md-logo">
+    <a href="../index.html" title="撮る夫くん 3.5.0 ドキュメント" class="md-nav__button md-logo">
       
         <i class="md-icon">videocam</i>
       
     </a>
     <a href="../index.html"
-       title="撮る夫くん 3.4.0 ドキュメント">撮る夫くん</a>
+       title="撮る夫くん 3.5.0 ドキュメント">撮る夫くん</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/AKAGI-Rails/vrmnx-toruo" title="Go to repository" class="md-source" data-md-source="github">
@@ -315,7 +315,7 @@
 
 <span class="sd">"""撮る夫くん - VRMNX用グローバルカメラ拡張機能</span>
 
-<span class="sd">VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。</span>
+<span class="sd">VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのグローバルカメラ（フライスルーカメラ）の機能をアップグレードします。</span>
 <span class="sd">ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行うことができます。</span>
 
 <span class="sd">撮る夫くんには以下のような機能があります。</span>
@@ -323,7 +323,7 @@
 <span class="sd">- FOVなどのGUI操作</span>
 <span class="sd">- FOV, F値と対象物までの距離から，一眼レフカメラの機構をシミュレートした被写界深度制御</span>
 <span class="sd">- 手ブレ風エフェクト</span>
-<span class="sd">- 車両追尾</span>
+<span class="sd">- 列車追尾モード・追い撮りモード</span>
 <span class="sd">- 視点保存</span>
 <span class="sd">- ゲームパッドでのカメラ操作</span>
 
@@ -351,7 +351,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DEBUG'</span><span class="p">,</span> <span class="s1">'dFOV'</span><span class="p">,</span> <span class="s1">'dRot'</span><span class="p">,</span> <span class="s1">'dMov'</span><span class="p">,</span> <span class="s1">'shake_factor'</span><span class="p">,</span> <span class="s1">'shake_freq'</span><span class="p">,</span>
            <span class="s1">'activate'</span><span class="p">,</span> <span class="s1">'set_toruo'</span><span class="p">,</span> <span class="s1">'jump_toruo'</span><span class="p">,</span> <span class="s1">'setfactor'</span><span class="p">,</span> <span class="s1">'setshakemode'</span><span class="p">,</span> <span class="s1">'set_gcdist'</span><span class="p">,</span>
            <span class="s1">'screenshot'</span><span class="p">]</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.4.0'</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">'3.5.0'</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">"AKAGI"</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -416,9 +416,11 @@
 <span class="n">shake_factor</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1">#: 手ブレ量</span>
 <span class="n">shake_freq</span> <span class="o">=</span> <span class="mf">4.0</span>    <span class="c1">#: 手ブレ周波数</span>
 
+<span class="c1"># カメラモード選択</span>
+<span class="n">_toruomode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#: 撮る夫くんのモード状態 0=ノーマル、1=追尾, 2=追い撮り</span>
+
 <span class="c1"># 追尾モード</span>
 <span class="n">_trainlist</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'obj'</span><span class="p">:[],</span> <span class="s1">'id'</span><span class="p">:[],</span> <span class="s1">'name'</span><span class="p">:[]}</span>
-<span class="n">_tracking_mode</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
 <span class="n">_fuzzytrack</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
 <span class="n">_tracking_car</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">_tracking_trainid</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -427,6 +429,9 @@
 <span class="n">_tracking_dist</span> <span class="o">=</span> <span class="p">[</span><span class="mf">256.0</span><span class="p">]</span>
 <span class="n">_tracking_relative</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'x'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">],</span> <span class="s1">'y'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">],</span> <span class="s1">'z'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">]}</span>
 <span class="n">_tracking_af</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
+
+<span class="c1"># 追い撮りモード</span>
+<span class="n">_following_relpos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'r'</span><span class="p">:[</span><span class="mf">256.0</span><span class="p">],</span> <span class="s1">'theta'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">],</span> <span class="s1">'phi'</span><span class="p">:[</span><span class="mf">0.0</span><span class="p">]}</span>  <span class="c1"># r:動径, theta:水平角, phi:垂直角  角度はdegree</span>
 
 <span class="c1"># ゲームパッドFLG</span>
 <span class="n">_GPlist</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>  <span class="c1">#: 接続されているとTrue </span>
@@ -552,44 +557,57 @@
 <span class="sd">    """</span>
     <span class="c1"># ゲームパッド操作</span>
     <span class="k">if</span> <span class="n">_gamepad_sw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
-        <span class="n">gp</span> <span class="o">=</span> <span class="n">_gamepad_sw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">gp</span> <span class="o">=</span> <span class="n">_gamepad_sw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># ゲームパッドを取得</span>
 
         <span class="c1"># スクリーンショット(mss)</span>
         <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadB</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
             <span class="n">screenshot</span><span class="p">()</span>
 
-        <span class="c1"># ダッシュ処理</span>
-        <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadA</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
-            <span class="n">_dash_factor</span> <span class="o">+=</span> <span class="n">DASH_DIFF</span> <span class="o">*</span> <span class="n">ftime</span>
+
+        <span class="k">if</span> <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># 追い撮りモード以外</span>
+            <span class="c1"># ダッシュ処理</span>
+            <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadA</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
+                <span class="n">_dash_factor</span> <span class="o">+=</span> <span class="n">DASH_DIFF</span> <span class="o">*</span> <span class="n">ftime</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_dash_factor</span> <span class="o">-=</span> <span class="n">DASH_DIFF</span> <span class="o">*</span> <span class="n">ftime</span>
+            <span class="n">_dash_factor</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">DASH_MAX</span><span class="p">)</span>
+
+            <span class="c1"># 並進移動</span>
+            <span class="c1"># 左スティック・水平面</span>
+            <span class="n">LX</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLX</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="n">LY</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLY</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="c1"># 上下移動</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadRB</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
+                <span class="n">v</span> <span class="o">+=</span> <span class="o">+</span><span class="mi">1</span> <span class="o">*</span> <span class="n">_gamepad_param</span><span class="p">[</span><span class="s1">'v_sense'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadLB</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
+                <span class="n">v</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">_gamepad_param</span><span class="p">[</span><span class="s1">'v_sense'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">LX</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">LY</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">_move</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">adjust_analogL</span><span class="p">(</span><span class="n">LX</span><span class="p">)</span><span class="o">*</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="n">adjust_analogL</span><span class="p">(</span><span class="n">LY</span><span class="p">)</span><span class="o">*</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="n">ftime</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadA</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
+                    <span class="n">_dash_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+            <span class="c1"># 見回し（ゲームパッド）</span>
+            <span class="n">RX</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickRX</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">RX</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">_rotate</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">adjust_analogR</span><span class="p">(</span><span class="n">RX</span><span class="p">),</span> <span class="n">ftime</span><span class="p">)</span>
+
+            <span class="n">RY</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickRY</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">RY</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">_rotatevt</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">adjust_analogR</span><span class="p">(</span><span class="n">RY</span><span class="p">)</span><span class="o">*</span><span class="n">_gamepad_RYsgn</span><span class="p">,</span> <span class="n">ftime</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_dash_factor</span> <span class="o">-=</span> <span class="n">DASH_DIFF</span> <span class="o">*</span> <span class="n">ftime</span>
-        <span class="n">_dash_factor</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">DASH_MAX</span><span class="p">)</span>
+            <span class="c1"># 追い撮りモードの操作</span>
+            <span class="n">LY</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLY</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'r'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'r'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dMov</span> <span class="o">*</span> <span class="n">adjust_analogL</span><span class="p">(</span><span class="n">LY</span><span class="p">)</span> <span class="o">*</span> <span class="n">ftime</span> <span class="o">*</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mf">4321.0</span><span class="p">)</span>
+            
+            <span class="n">RX</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickRX</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">RX</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">dRot</span> <span class="o">*</span> <span class="n">adjust_analogR</span><span class="p">(</span><span class="n">RX</span><span class="p">)</span> <span class="o">*</span> <span class="n">ftime</span> <span class="o">*</span> <span class="mi">100</span>
 
-        <span class="c1"># 並進移動</span>
-        <span class="c1"># 左スティック・水平面</span>
-        <span class="n">LX</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLX</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
-        <span class="n">LY</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLY</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
-        <span class="c1"># 上下移動</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadRB</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
-            <span class="n">v</span> <span class="o">+=</span> <span class="o">+</span><span class="mi">1</span> <span class="o">*</span> <span class="n">_gamepad_param</span><span class="p">[</span><span class="s1">'v_sense'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadLB</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
-            <span class="n">v</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">_gamepad_param</span><span class="p">[</span><span class="s1">'v_sense'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">LX</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">LY</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">_move</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">adjust_analogL</span><span class="p">(</span><span class="n">LX</span><span class="p">)</span><span class="o">*</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="n">adjust_analogL</span><span class="p">(</span><span class="n">LY</span><span class="p">)</span><span class="o">*</span><span class="n">_dash_factor</span><span class="p">,</span> <span class="n">ftime</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadA</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
-                <span class="n">_dash_factor</span> <span class="o">=</span> <span class="mf">1.0</span>
-
-        <span class="c1"># 見回し（ゲームパッド）</span>
-        <span class="n">RX</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickRX</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">RX</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
-            <span class="n">_rotate</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">adjust_analogR</span><span class="p">(</span><span class="n">RX</span><span class="p">),</span> <span class="n">ftime</span><span class="p">)</span>
-
-        <span class="n">RY</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickRY</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">RY</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
-            <span class="n">_rotatevt</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">adjust_analogR</span><span class="p">(</span><span class="n">RY</span><span class="p">)</span><span class="o">*</span><span class="n">_gamepad_RYsgn</span><span class="p">,</span> <span class="n">ftime</span><span class="p">)</span>
-
+            <span class="n">RY</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickRY</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">RY</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'phi'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'phi'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">dRot</span> <span class="o">*</span> <span class="n">adjust_analogR</span><span class="p">(</span><span class="n">RY</span><span class="p">)</span><span class="o">*</span><span class="n">_gamepad_RYsgn</span> <span class="o">*</span> <span class="n">ftime</span> <span class="o">*</span> <span class="mi">100</span>
         <span class="c1"># ズームイン・ズームアウト（ゲームパッド）</span>
         <span class="n">stat</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadLEFT</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">stat</span><span class="p">:</span>
@@ -614,12 +632,14 @@
     <span class="c1"># 追尾処理</span>
     <span class="n">istracking</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># 初期化</span>
 
-    <span class="k">if</span> <span class="n">_tracking_mode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">_tracking_car</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">_tracking_car</span><span class="p">:</span>
+        <span class="c1"># 追尾モード時</span>
         <span class="k">if</span> <span class="n">_fuzzytrack</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_tracktargetpos_fuzzy</span><span class="p">(</span><span class="n">_tracking_trainid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_tracking_carnum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_getcarworldpos</span><span class="p">(</span><span class="n">car</span><span class="o">=</span><span class="n">_tracking_car</span><span class="p">)</span>
-        <span class="n">vrmapi</span><span class="o">.</span><span class="n">LOG</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tgtpos</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+            <span class="n">vrmapi</span><span class="o">.</span><span class="n">LOG</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tgtpos</span><span class="p">))</span>
         <span class="n">dist</span> <span class="o">=</span> <span class="n">vecdistance</span><span class="p">(</span><span class="n">campos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">tgtpos</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">_tracking_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">istracking</span> <span class="o">=</span> <span class="kc">True</span>
@@ -631,6 +651,39 @@
                 <span class="c1">#_blur[0] = 2*(135.0-_fov[0])/125.0</span>
                 <span class="n">_focus</span><span class="p">()</span>
 
+    <span class="k">if</span> <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">_tracking_car</span><span class="p">:</span>
+        <span class="c1"># 追い撮りモード時</span>
+        <span class="c1"># atの取得</span>
+        <span class="k">if</span> <span class="n">_fuzzytrack</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_tracktargetpos_fuzzy</span><span class="p">(</span><span class="n">_tracking_trainid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_tracking_carnum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_getcarworldpos</span><span class="p">(</span><span class="n">car</span><span class="o">=</span><span class="n">_tracking_car</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+            <span class="k">pass</span>
+            <span class="c1">#vrmapi.LOG(str(tgtpos))</span>
+        <span class="c1"># fromを車両ローカルからグローバルに計算</span>
+        <span class="n">carpos</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetPosition</span><span class="p">()</span>
+        <span class="n">carrotx</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetRotateX</span><span class="p">()</span>
+        <span class="n">carroty</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetRotateY</span><span class="p">()</span>
+        <span class="n">carrotz</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetRotateZ</span><span class="p">()</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'r'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">carroty</span><span class="p">)</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'phi'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
+
+        <span class="n">rel_x</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">pi</span><span class="p">)</span>
+        <span class="n">rel_z</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">pi</span><span class="p">)</span>
+        <span class="n">rel_y</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">cos</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">phi</span><span class="p">)</span>
+
+        <span class="n">campos</span> <span class="o">=</span> <span class="n">vecadd</span><span class="p">(</span><span class="n">tgtpos</span><span class="p">,</span> <span class="p">[</span><span class="n">rel_x</span><span class="p">,</span> <span class="n">rel_y</span><span class="p">,</span> <span class="n">rel_z</span><span class="p">])</span> <span class="o">+</span> <span class="n">tgtpos</span>
+
+        <span class="k">if</span> <span class="n">_tracking_af</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1"># オートフォーカス</span>
+            <span class="n">_depth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">)</span>  
+
+        <span class="c1"># 手ブレモード用flg</span>
+        <span class="n">istracking</span> <span class="o">=</span> <span class="kc">True</span>
+    
     <span class="c1"># ブレ計算</span>
     <span class="k">if</span> <span class="n">_shakemode</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">istracking</span><span class="p">:</span>
@@ -642,7 +695,8 @@
             <span class="n">_rotate</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">_shake_dhr</span><span class="p">,</span> <span class="n">ftime</span><span class="p">)</span>
             <span class="n">_rotatevt</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">_shake_dvt</span><span class="p">,</span> <span class="n">ftime</span><span class="p">)</span>
             
-    <span class="n">NXSYS</span><span class="o">.</span><span class="n">SetGlobalCameraPos</span><span class="p">(</span><span class="n">campos</span><span class="p">)</span></div>
+    <span class="n">NXSYS</span><span class="o">.</span><span class="n">SetGlobalCameraPos</span><span class="p">(</span><span class="n">campos</span><span class="p">)</span>
+    <span class="n">LOG</span><span class="p">(</span><span class="s1">'Toruo OK'</span><span class="p">)</span></div>
 
 
 
@@ -1156,7 +1210,7 @@
     <span class="k">global</span> <span class="n">_depth</span>
     <span class="k">global</span> <span class="n">_fnum</span>
     <span class="k">global</span> <span class="n">_trainlist</span>
-    <span class="k">global</span> <span class="n">_tracking_mode</span>
+    <span class="k">global</span> <span class="n">_toruomode</span>
     <span class="k">global</span> <span class="n">_tracking_car</span>
     <span class="k">global</span> <span class="n">_tracking_trainid</span>
     <span class="k">global</span> <span class="n">_tracking_trnlen</span>
@@ -1203,10 +1257,28 @@
             <span class="n">_save_config</span><span class="p">()</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreePop</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreeNode</span><span class="p">(</span><span class="s2">"target"</span><span class="p">,</span> <span class="s2">"追尾モード"</span><span class="p">):</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="s2">"trackmode"</span><span class="p">,</span> <span class="s2">"追尾モード"</span><span class="p">,</span> <span class="n">_tracking_mode</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreeNode</span><span class="p">(</span><span class="s2">"target"</span><span class="p">,</span> <span class="s2">"モード選択"</span><span class="p">):</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">RadioButton</span><span class="p">(</span><span class="s2">"toruomode0_normal"</span><span class="p">,</span> <span class="s2">"ノーマル"</span><span class="p">,</span> <span class="n">_toruomode</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">SameLine</span><span class="p">()</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">RadioButton</span><span class="p">(</span><span class="s2">"toruomode1_track"</span><span class="p">,</span> <span class="s2">"列車追尾モード"</span><span class="p">,</span> <span class="n">_toruomode</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">SameLine</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">IMGUI</span><span class="o">.</span><span class="n">RadioButton</span><span class="p">(</span><span class="s2">"toruomode2_follow"</span><span class="p">,</span> <span class="s2">"追い撮り"</span><span class="p">,</span> <span class="n">_toruomode</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">_tracking_car</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># 追尾対象車両が未指定の場合、操作対象編成を追尾対象編成にしようとする</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">LAYOUT</span><span class="o">.</span><span class="n">GetActive</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'train'</span><span class="p">:</span>
+                    <span class="n">trn</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">'object'</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">trn</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="n">_tracking_trainid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">trn</span><span class="o">.</span><span class="n">GetID</span><span class="p">()</span>
+                    <span class="n">_tracking_car</span> <span class="o">=</span> <span class="n">trn</span><span class="o">.</span><span class="n">GetCarList</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># 追尾対象車両は、アクティブ編成の進行方向先頭車</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># 編成の取得に失敗してたら戻る</span>
+                    <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="s2">"trackaf"</span><span class="p">,</span> <span class="s2">"オートフォーカス"</span><span class="p">,</span> <span class="n">_tracking_af</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreeNode</span><span class="p">(</span><span class="s2">"targettrn"</span><span class="p">,</span> <span class="s2">"対象の編成"</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">IMGUI</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="s2">"trnlist"</span><span class="p">,</span> <span class="s2">"編成リストを更新"</span><span class="p">):</span>
                 <span class="n">_refresh_trainlist</span><span class="p">()</span>
@@ -1232,7 +1304,15 @@
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s2">"relx"</span><span class="p">,</span> <span class="s2">"相対X"</span><span class="p">,</span> <span class="n">_tracking_relative</span><span class="p">[</span><span class="s1">'x'</span><span class="p">],</span> <span class="o">-</span><span class="mf">150.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s2">"rely"</span><span class="p">,</span> <span class="s2">"相対Y"</span><span class="p">,</span> <span class="n">_tracking_relative</span><span class="p">[</span><span class="s1">'y'</span><span class="p">],</span> <span class="o">-</span><span class="mf">150.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s2">"relz"</span><span class="p">,</span> <span class="s2">"相対Z"</span><span class="p">,</span> <span class="n">_tracking_relative</span><span class="p">[</span><span class="s1">'z'</span><span class="p">],</span> <span class="o">-</span><span class="mf">150.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s2">"trdist"</span><span class="p">,</span> <span class="s2">"追尾距離"</span><span class="p">,</span> <span class="n">_tracking_dist</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">2500.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># 追尾モード</span>
+            <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s2">"trdist"</span><span class="p">,</span> <span class="s2">"追尾距離"</span><span class="p">,</span> <span class="n">_tracking_dist</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">2500.0</span><span class="p">)</span>  <span class="c1"># 追尾モードだけ。追い撮りモードでは不使用</span>
+        <span class="k">if</span> <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># 追い撮りモード</span>
+            <span class="k">if</span> <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreeNode</span><span class="p">(</span><span class="s1">'following_rel_pad'</span><span class="p">,</span> <span class="s2">"追い撮りカメラ操作"</span><span class="p">):</span>
+                <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s1">'following_rel_r'</span><span class="p">,</span> <span class="s2">"相対距離"</span><span class="p">,</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'r'</span><span class="p">],</span> <span class="mf">16.0</span><span class="p">,</span> <span class="mf">1024.0</span><span class="p">)</span>
+                <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s1">'following_rel_theta'</span><span class="p">,</span> <span class="s2">"水平角度"</span><span class="p">,</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">],</span> <span class="o">-</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">)</span>
+                <span class="n">IMGUI</span><span class="o">.</span><span class="n">SliderFloat</span><span class="p">(</span><span class="s1">'following_rel_phi'</span><span class="p">,</span> <span class="s2">"垂直角度"</span><span class="p">,</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'phi'</span><span class="p">],</span> <span class="o">-</span><span class="mf">85.0</span><span class="p">,</span> <span class="mf">85.0</span><span class="p">)</span>
+                <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreePop</span><span class="p">()</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">_tracking_car</span><span class="p">))</span>
         <span class="n">IMGUI</span><span class="o">.</span><span class="n">TreePop</span><span class="p">()</span>
 
@@ -1328,13 +1408,13 @@
         <span class="n">pos</span> <span class="o">=</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGlobalCameraPos</span><span class="p">()</span>
         <span class="n">pos_from</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">pos_at</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"From: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos_from</span><span class="p">))</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"At  : </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos_at</span><span class="p">))</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"Dist: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vecdistance</span><span class="p">(</span><span class="n">pos_from</span><span class="p">,</span> <span class="n">pos_at</span><span class="p">)))</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"L   : </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLX</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLY</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
-        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"Dash: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_dash_factor</span><span class="p">))</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"From: </span><span class="si">{:.2f}</span><span class="s2">,</span><span class="si">{:.2f}</span><span class="s2">,</span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">pos_from</span><span class="p">))</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"At  : </span><span class="si">{:.2f}</span><span class="s2">,</span><span class="si">{:.2f}</span><span class="s2">,</span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">pos_at</span><span class="p">))</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"Dist: </span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vecdistance</span><span class="p">(</span><span class="n">pos_from</span><span class="p">,</span> <span class="n">pos_at</span><span class="p">)))</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"L   : </span><span class="si">{:.3f}</span><span class="s2">, </span><span class="si">{:.3f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLX</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadAnalogStickLY</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+        <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">"Dash: </span><span class="si">{:.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_dash_factor</span><span class="p">))</span>
+    <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s1">'撮る夫くん Ver.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__version__</span><span class="p">))</span>
     <span class="n">IMGUI</span><span class="o">.</span><span class="n">End</span><span class="p">()</span>
-
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_change_gamepad</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""ゲームパッドのアクティブ状態を更新。</span>

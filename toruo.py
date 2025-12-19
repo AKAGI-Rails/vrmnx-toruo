@@ -24,7 +24,7 @@
 
 """撮る夫くん - VRMNX用グローバルカメラ拡張機能
 
-VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのフライスルーカメラの機能をアップグレードします。
+VRMNX用Python拡張の **撮る夫くん** は，VRMNXビュワーのグローバルカメラ（フライスルーカメラ）の機能をアップグレードします。
 ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行うことができます。
 
 撮る夫くんには以下のような機能があります。
@@ -32,7 +32,7 @@ ImGUIの操作パネルで，FOVや被写界深度の設定を直感的に行う
 - FOVなどのGUI操作
 - FOV, F値と対象物までの距離から，一眼レフカメラの機構をシミュレートした被写界深度制御
 - 手ブレ風エフェクト
-- 車両追尾
+- 列車追尾モード・追い撮りモード
 - 視点保存
 - ゲームパッドでのカメラ操作
 
@@ -60,7 +60,7 @@ Example:
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',
            'screenshot']
-__version__ = '3.4.0'
+__version__ = '3.5.0'
 __author__ = "AKAGI"
 
 try:
@@ -125,9 +125,11 @@ dMov = 25.0         #: 移動量感度
 shake_factor = 0.1  #: 手ブレ量
 shake_freq = 4.0    #: 手ブレ周波数
 
+# カメラモード選択
+_toruomode = [0]  #: 撮る夫くんのモード状態 0=ノーマル、1=追尾, 2=追い撮り
+
 # 追尾モード
 _trainlist = {'obj':[], 'id':[], 'name':[]}
-_tracking_mode = [False]
 _fuzzytrack = [False]
 _tracking_car = None
 _tracking_trainid = [0]
@@ -136,6 +138,9 @@ _tracking_carnum = [0]
 _tracking_dist = [256.0]
 _tracking_relative = {'x':[0.0], 'y':[0.0], 'z':[0.0]}
 _tracking_af = [False]
+
+# 追い撮りモード
+_following_relpos = {'r':[256.0], 'theta':[0.0], 'phi':[0.0]}  # r:動径, theta:水平角, phi:垂直角  角度はdegree
 
 # ゲームパッドFLG
 _GPlist = [False, False, False, False]  #: 接続されているとTrue 
@@ -259,44 +264,56 @@ def activate(obj, ev, param):
     """
     # ゲームパッド操作
     if _gamepad_sw[0] in [0,1,2,3]:
-        gp = _gamepad_sw[0]
+        gp = _gamepad_sw[0]  # ゲームパッドを取得
 
         # スクリーンショット(mss)
         if NXSYS.GetGamepadB(gp):
             screenshot()
 
-        # ダッシュ処理
-        if NXSYS.GetGamepadA(gp):
-            _dash_factor += DASH_DIFF * ftime
+        if _toruomode[0] != 2:  # 追い撮りモード以外
+            # ダッシュ処理
+            if NXSYS.GetGamepadA(gp):
+                _dash_factor += DASH_DIFF * ftime
+            else:
+                _dash_factor -= DASH_DIFF * ftime
+            _dash_factor = clip(_dash_factor, 1.0, DASH_MAX)
+
+            # 並進移動
+            # 左スティック・水平面
+            LX = NXSYS.GetGamepadAnalogStickLX(gp)
+            LY = NXSYS.GetGamepadAnalogStickLY(gp)
+            # 上下移動
+            v = 0
+            if NXSYS.GetGamepadRB(gp):
+                v += +1 * _gamepad_param['v_sense'][0]
+            if NXSYS.GetGamepadLB(gp):
+                v += -1 * _gamepad_param['v_sense'][0]
+            if abs(LX) > 100 or abs(LY) > 100 or v != 0:
+                _move(campos, adjust_analogL(LX)*_dash_factor, v*_dash_factor, adjust_analogL(LY)*_dash_factor, ftime)
+            else:
+                if not NXSYS.GetGamepadA(gp):
+                    _dash_factor = 1.0
+
+            # 見回し（ゲームパッド）
+            RX = NXSYS.GetGamepadAnalogStickRX(gp)
+            if abs(RX) > 100:
+                _rotate(campos, adjust_analogR(RX), ftime)
+
+            RY = NXSYS.GetGamepadAnalogStickRY(gp)
+            if abs(RY) > 100:
+                _rotatevt(campos, adjust_analogR(RY)*_gamepad_RYsgn, ftime)
         else:
-            _dash_factor -= DASH_DIFF * ftime
-        _dash_factor = clip(_dash_factor, 1.0, DASH_MAX)
+            # 追い撮りモードの操作
+            LY = NXSYS.GetGamepadAnalogStickLY(gp)
+            _following_relpos['r'][0] = clip(_following_relpos['r'][0] - dMov * adjust_analogL(LY) * ftime * 0.0005, 16, 4321.0)
+            
+            RX = NXSYS.GetGamepadAnalogStickRX(gp)
+            if abs(RX) > 100:
+                _following_relpos['theta'][0] = _following_relpos['theta'][0] - dRot * adjust_analogR(RX) * ftime * 100
 
-        # 並進移動
-        # 左スティック・水平面
-        LX = NXSYS.GetGamepadAnalogStickLX(gp)
-        LY = NXSYS.GetGamepadAnalogStickLY(gp)
-        # 上下移動
-        v = 0
-        if NXSYS.GetGamepadRB(gp):
-            v += +1 * _gamepad_param['v_sense'][0]
-        if NXSYS.GetGamepadLB(gp):
-            v += -1 * _gamepad_param['v_sense'][0]
-        if abs(LX) > 100 or abs(LY) > 100 or v != 0:
-            _move(campos, adjust_analogL(LX)*_dash_factor, v*_dash_factor, adjust_analogL(LY)*_dash_factor, ftime)
-        else:
-            if not NXSYS.GetGamepadA(gp):
-                _dash_factor = 1.0
-
-        # 見回し（ゲームパッド）
-        RX = NXSYS.GetGamepadAnalogStickRX(gp)
-        if abs(RX) > 100:
-            _rotate(campos, adjust_analogR(RX), ftime)
-
-        RY = NXSYS.GetGamepadAnalogStickRY(gp)
-        if abs(RY) > 100:
-            _rotatevt(campos, adjust_analogR(RY)*_gamepad_RYsgn, ftime)
-
+            RY = NXSYS.GetGamepadAnalogStickRY(gp)
+            if abs(RY) > 100:
+                _following_relpos['phi'][0] = _following_relpos['phi'][0] + dRot * adjust_analogR(RY)*_gamepad_RYsgn * ftime * 100
         # ズームイン・ズームアウト（ゲームパッド）
         stat = NXSYS.GetGamepadLEFT(gp)
         if stat:
@@ -321,12 +338,12 @@ def activate(obj, ev, param):
     # 追尾処理
     istracking = False  # 初期化
 
-    if _tracking_mode[0] and _tracking_car:
+    if _toruomode[0] == 1 and _tracking_car:
+        # 追尾モード時
         if _fuzzytrack[0]:
             tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
         else:
             tgtpos = _getcarworldpos(car=_tracking_car)
-        vrmapi.LOG(str(tgtpos))
         dist = vecdistance(campos[0:3], tgtpos)
         if dist < _tracking_dist[0]:
             istracking = True
@@ -338,6 +355,34 @@ def activate(obj, ev, param):
                 #_blur[0] = 2*(135.0-_fov[0])/125.0
                 _focus()
 
+    if _toruomode[0] == 2 and _tracking_car:
+        # 追い撮りモード時
+        # atの取得
+        if _fuzzytrack[0]:
+            tgtpos = _tracktargetpos_fuzzy(_tracking_trainid[0], _tracking_carnum[0]-1)
+        else:
+            tgtpos = _getcarworldpos(car=_tracking_car)
+        # fromを車両ローカルからグローバルに計算
+        carroty = _tracking_car.GetRotateY()
+
+        r = _following_relpos['r'][0]
+        theta = (_following_relpos['theta'][0] + carroty) * pi / 180.0
+        phi = _following_relpos['phi'][0] * pi / 180.0
+
+        rel_x = r * sin(pi /2 - phi) * cos(theta + pi)
+        rel_z = r * sin(pi /2 - phi) * sin(theta + pi)
+        rel_y = r * cos(pi /2 - phi)
+
+        campos = vecadd(tgtpos, [rel_x, rel_y, rel_z]) + tgtpos
+
+        if _tracking_af[0]:
+            # オートフォーカス
+            _depth[0] = pow(r, -0.25)
+            _focus()
+
+        # 手ブレモード用flg
+        istracking = True
+    
     # ブレ計算
     if _shakemode[0]:
         if istracking:
@@ -350,6 +395,7 @@ def activate(obj, ev, param):
             _rotatevt(campos, _shake_dvt, ftime)
             
     NXSYS.SetGlobalCameraPos(campos)
+    LOG('Toruo OK')
 
 
 def jump_toruo(id=0):
@@ -767,6 +813,7 @@ def adjust_analogL(x):
     y = sgnx * ((absx/ANALOG_MAX)**_gamepad_param['L0_exp'][0]) * _gamepad_param['L0_sense'][0] * ANALOG_MAX
     return y
 
+
 def _rotate(campos, spd, ftime):
     """水平方向見回し
 
@@ -847,7 +894,7 @@ def _dispgui():
     global _depth
     global _fnum
     global _trainlist
-    global _tracking_mode
+    global _toruomode
     global _tracking_car
     global _tracking_trainid
     global _tracking_trnlen
@@ -894,10 +941,28 @@ def _dispgui():
             _save_config()
         IMGUI.TreePop()
 
-    if IMGUI.TreeNode("target", "追尾モード"):
-        IMGUI.Checkbox("trackmode", "追尾モード", _tracking_mode)
+    if IMGUI.TreeNode("target", "モード選択"):
+        IMGUI.RadioButton("toruomode0_normal", "ノーマル", _toruomode, 0)
         IMGUI.SameLine()
+        IMGUI.RadioButton("toruomode1_track", "列車追尾モード", _toruomode, 1)
+        IMGUI.SameLine()
+        if IMGUI.RadioButton("toruomode2_follow", "追い撮り", _toruomode, 2):
+            if _tracking_car is None:
+                # 追尾対象車両が未指定の場合、操作対象編成を追尾対象編成にしようとする
+                d = LAYOUT.GetActive()
+                if d['type'] == 'train':
+                    trn = d['object']
+                    if trn.GetDirection() == 1:
+                        i = 0
+                    else:
+                        i = -1
+                    _tracking_trainid[0] = trn.GetID()
+                    _tracking_car = trn.GetCarList()[i]  # 追尾対象車両は、アクティブ編成の進行方向先頭車
+                else:
+                    # 編成の取得に失敗してたら戻る
+                    _toruomode[0] = 0
         IMGUI.Checkbox("trackaf", "オートフォーカス", _tracking_af)
+
         if IMGUI.TreeNode("targettrn", "対象の編成"):
             if IMGUI.Button("trnlist", "編成リストを更新"):
                 _refresh_trainlist()
@@ -923,7 +988,15 @@ def _dispgui():
         IMGUI.SliderFloat("relx", "相対X", _tracking_relative['x'], -150.0, 150.0)
         IMGUI.SliderFloat("rely", "相対Y", _tracking_relative['y'], -150.0, 150.0)
         IMGUI.SliderFloat("relz", "相対Z", _tracking_relative['z'], -150.0, 150.0)
-        IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)
+
+        if _toruomode[0] == 1:  # 追尾モード
+            IMGUI.SliderFloat("trdist", "追尾距離", _tracking_dist, 100.0, 2500.0)  # 追尾モードだけ。追い撮りモードでは不使用
+        if _toruomode[0] == 2:  # 追い撮りモード
+            if IMGUI.TreeNode('following_rel_pad', "追い撮りカメラ操作"):
+                IMGUI.SliderFloat('following_rel_r', "相対距離", _following_relpos['r'], 16.0, 1024.0)
+                IMGUI.SliderFloat('following_rel_theta', "水平角度", _following_relpos['theta'], -180.0, 180.0)
+                IMGUI.SliderFloat('following_rel_phi', "垂直角度", _following_relpos['phi'], -85.0, 85.0)
+                IMGUI.TreePop()
         IMGUI.Text(str(_tracking_car))
         IMGUI.TreePop()
 
@@ -1019,11 +1092,12 @@ def _dispgui():
         pos = NXSYS.GetGlobalCameraPos()
         pos_from = pos[:3]
         pos_at = pos[3:]
-        IMGUI.Text("From: {}".format(pos_from))
-        IMGUI.Text("At  : {}".format(pos_at))
-        IMGUI.Text("Dist: {}".format(vecdistance(pos_from, pos_at)))
-        IMGUI.Text("L   : {}, {}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
-        IMGUI.Text("Dash: {}".format(_dash_factor))
+        IMGUI.Text("From: {:.2f},{:.2f},{:.2f}".format(*pos_from))
+        IMGUI.Text("At  : {:.2f},{:.2f},{:.2f}".format(*pos_at))
+        IMGUI.Text("Dist: {:.2f}".format(vecdistance(pos_from, pos_at)))
+        IMGUI.Text("L   : {:.3f}, {:.3f}".format(NXSYS.GetGamepadAnalogStickLX(0), NXSYS.GetGamepadAnalogStickLY(0)))
+        IMGUI.Text("Dash: {:.2f}".format(_dash_factor))
+    IMGUI.Text('撮る夫くん Ver.{}'.format(__version__))
     IMGUI.End()
 
 
