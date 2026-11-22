@@ -12,21 +12,27 @@
 #
 import os
 import sys
+import re
+from pathlib import Path
+from unittest.mock import MagicMock
+
 sys.path.insert(0, os.path.abspath('../'))
 
-import toruo
+# vrmapi のモック（NXSYS.GetLayoutPath が文字列を返さないと os.path.split でエラーになるため）
+mock_vrmapi = MagicMock()
+mock_vrmapi.SYSTEM.return_value.GetLayoutPath.return_value = './foo.bar'
+sys.modules['vrmapi'] = mock_vrmapi
 
+# toruo を import せずにソースからバージョンを取得
+toruo_src = (Path(__file__).resolve().parent.parent / "toruo.py").read_text(encoding="utf-8")
+version_match = re.search(r"^__version__\s*=\s*['\"]([^'\"]+)['\"]", toruo_src, re.M)
+release = version_match.group(1) if version_match else "0.0.0"
 
 # -- Project information -----------------------------------------------------
 
 project = '撮る夫くん'
-copyright = '2021-2025, AKAGI Rails'
+copyright = '2021-2026, AKAGI Rails'
 author = 'AKAGI Rails'
-
-# The full version, including alpha/beta/rc tags
-release = toruo.__version__
-
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be

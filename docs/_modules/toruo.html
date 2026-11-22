@@ -293,7 +293,7 @@
 
 <span class="c1"># MIT License</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2021-2025 AKAGI-Rails</span>
+<span class="c1"># Copyright (c) 2021-2026 AKAGI-Rails</span>
 <span class="c1"># </span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
 <span class="c1"># of this software and associated documentation files (the "Software"), to deal</span>
@@ -563,7 +563,6 @@
         <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadB</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
             <span class="n">screenshot</span><span class="p">()</span>
 
-
         <span class="k">if</span> <span class="n">_toruomode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># 追い撮りモード以外</span>
             <span class="c1"># ダッシュ処理</span>
             <span class="k">if</span> <span class="n">NXSYS</span><span class="o">.</span><span class="n">GetGamepadA</span><span class="p">(</span><span class="n">gp</span><span class="p">):</span>
@@ -638,8 +637,6 @@
             <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_tracktargetpos_fuzzy</span><span class="p">(</span><span class="n">_tracking_trainid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_tracking_carnum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_getcarworldpos</span><span class="p">(</span><span class="n">car</span><span class="o">=</span><span class="n">_tracking_car</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
-            <span class="n">vrmapi</span><span class="o">.</span><span class="n">LOG</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tgtpos</span><span class="p">))</span>
         <span class="n">dist</span> <span class="o">=</span> <span class="n">vecdistance</span><span class="p">(</span><span class="n">campos</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">tgtpos</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">_tracking_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">istracking</span> <span class="o">=</span> <span class="kc">True</span>
@@ -658,14 +655,8 @@
             <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_tracktargetpos_fuzzy</span><span class="p">(</span><span class="n">_tracking_trainid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">_tracking_carnum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tgtpos</span> <span class="o">=</span> <span class="n">_getcarworldpos</span><span class="p">(</span><span class="n">car</span><span class="o">=</span><span class="n">_tracking_car</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
-            <span class="k">pass</span>
-            <span class="c1">#vrmapi.LOG(str(tgtpos))</span>
         <span class="c1"># fromを車両ローカルからグローバルに計算</span>
-        <span class="n">carpos</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetPosition</span><span class="p">()</span>
-        <span class="n">carrotx</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetRotateX</span><span class="p">()</span>
         <span class="n">carroty</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetRotateY</span><span class="p">()</span>
-        <span class="n">carrotz</span> <span class="o">=</span> <span class="n">_tracking_car</span><span class="o">.</span><span class="n">GetRotateZ</span><span class="p">()</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'r'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="n">_following_relpos</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">carroty</span><span class="p">)</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span>
@@ -679,7 +670,8 @@
 
         <span class="k">if</span> <span class="n">_tracking_af</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="c1"># オートフォーカス</span>
-            <span class="n">_depth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">)</span>  
+            <span class="n">_depth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">)</span>
+            <span class="n">_focus</span><span class="p">()</span>
 
         <span class="c1"># 手ブレモード用flg</span>
         <span class="n">istracking</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1130,6 +1122,7 @@
     <span class="n">y</span> <span class="o">=</span> <span class="n">sgnx</span> <span class="o">*</span> <span class="p">((</span><span class="n">absx</span><span class="o">/</span><span class="n">ANALOG_MAX</span><span class="p">)</span><span class="o">**</span><span class="n">_gamepad_param</span><span class="p">[</span><span class="s1">'L0_exp'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">_gamepad_param</span><span class="p">[</span><span class="s1">'L0_sense'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ANALOG_MAX</span>
     <span class="k">return</span> <span class="n">y</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_rotate</span><span class="p">(</span><span class="n">campos</span><span class="p">,</span> <span class="n">spd</span><span class="p">,</span> <span class="n">ftime</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""水平方向見回し</span>
 
@@ -1416,6 +1409,7 @@
     <span class="n">IMGUI</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s1">'撮る夫くん Ver.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__version__</span><span class="p">))</span>
     <span class="n">IMGUI</span><span class="o">.</span><span class="n">End</span><span class="p">()</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_change_gamepad</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">"""ゲームパッドのアクティブ状態を更新。</span>
 <span class="sd">    </span>
@@ -1570,7 +1564,7 @@
       <div class="md-footer-meta__inner md-grid">
         <div class="md-footer-copyright">
           <div class="md-footer-copyright__highlight">
-              &#169; Copyright 2021-2025, AKAGI Rails.
+              &#169; Copyright 2021-2026, AKAGI Rails.
               
           </div>
             Created using
