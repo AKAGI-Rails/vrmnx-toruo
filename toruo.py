@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright (c) 2021-2025 AKAGI-Rails
+# Copyright (c) 2021-2026 AKAGI-Rails
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -60,7 +60,7 @@ Example:
 __all__ = ['DEBUG', 'dFOV', 'dRot', 'dMov', 'shake_factor', 'shake_freq',
            'activate', 'set_toruo', 'jump_toruo', 'setfactor', 'setshakemode', 'set_gcdist',
            'screenshot']
-__version__ = '3.5.0'
+__version__ = '3.5.1'
 __author__ = "AKAGI"
 
 try:
@@ -74,7 +74,7 @@ from math import sin,cos,tan,sqrt, pi, pow, ceil,floor
 from random import triangular
 import json
 import os.path
-import ctypes
+import ctypes.wintypes
 import datetime
 from itertools import chain
 
@@ -92,9 +92,39 @@ DIRECTORY, TAIL = os.path.split(NXSYS.GetLayoutPath())
 
 # フレームイベントの設定は activate イベントハンドラでinitのタイミングに移動
 
-_PARENT = None  # 親オブジェクト
+def _default_config() -> dict:
+    """空の設定ファイルを返す
+    
+    撮る夫くんconfig v.3.0
+    """
+    return {
+        'toruoconfig': 'toruoconfig',  # ファイル書式宣言。これがないjsonは相手にしない。
+        'version': '3.0',  # 書式バージョン宣言
+
+        'layouts': {
+            # dict of dict - レイアウトごとの情報を保存。順不同。
+            # key: レイアウトのファイルパスのTAIL (ファイル名)
+            # value: 設定内容(dict)
+
+            # TAIL: {
+            #     'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
+            #     'timestamp': str(datetime.datetime.now()),
+            # 
+            #     # 'toruo'要素は旧バージョンと同等のリスト。
+            #     # 保存済み撮る夫くんのID-1がリストの番号になる。
+            #     'toruos': _toruos
+            #     
+            #     'gamepad': (int) #: ゲームパッドスイッチの状態（撮る夫くんでアクティブなデバイス番号。-1はOFF）
+            #     'gamepad_param': {'L0_sense':[1.0], 'L0_exp':[1.0], 'R0_sense':[1.0], 'R0_exp':[1.0], 'v_sense':[1.0]} by default
+            #     'aeparam': (dict) AEパラメータ
+            # }
+        }
+    }
+
+
+_PARENT: vrmapi.VRMLayout | None = None  # 親オブジェクト
 #_gcam = []     # 地上カメラのリスト
-_config = None  # 撮る夫くん設定データ
+_config = _default_config()  # 撮る夫くん設定データ
 _toruos = []    # 撮る夫くんたちのリスト
 _childid = [0]
 _systime = 0.0  # 前フレームの時刻を記録
@@ -176,7 +206,7 @@ os.makedirs(SSSAVEDIR, exist_ok=True)
 
 APPNAMES = ('鉄道模型シミュレーターNX', 'VRMONLINE-NX')
 
-def activate(obj, ev, param):
+def activate(obj: vrmapi.VRMLayout, ev: str, param: dict) -> None:
     """撮る夫くんを有効にするコマンド。
     
     レイアウトオブジェクトのイベントハンドラの先頭に書いてください。（ifの中には入れない。）::
@@ -564,36 +594,6 @@ def _save_toruo():
     d['aeparam'] = _aeparam
     _toruos.append(d)
     _save_config()
-
-
-def _default_config():
-    """空の設定ファイルを返す
-    
-    撮る夫くんconfig v.3.0
-    """
-    return {
-        'toruoconfig': 'toruoconfig',  # ファイル書式宣言。これがないjsonは相手にしない。
-        'version': '3.0',  # 書式バージョン宣言
-
-        'layouts': {
-            # dict of dict - レイアウトごとの情報を保存。順不同。
-            # key: レイアウトのファイルパスのTAIL (ファイル名)
-            # value: 設定内容(dict)
-
-            # TAIL: {
-            #     'filename': TAIL,  # ビュワーが開いているファイルとこの値で一致判定する。
-            #     'timestamp': str(datetime.datetime.now()),
-            # 
-            #     # 'toruo'要素は旧バージョンと同等のリスト。
-            #     # 保存済み撮る夫くんのID-1がリストの番号になる。
-            #     'toruos': _toruos
-            #     
-            #     'gamepad': (int) #: ゲームパッドスイッチの状態（撮る夫くんでアクティブなデバイス番号。-1はOFF）
-            #     'gamepad_param': {'L0_sense':[1.0], 'L0_exp':[1.0], 'R0_sense':[1.0], 'R0_exp':[1.0], 'v_sense':[1.0]} by default
-            #     'aeparam': (dict) AEパラメータ
-            # }
-        }
-    }
 
 
 def _check_config(config):
